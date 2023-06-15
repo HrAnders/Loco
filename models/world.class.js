@@ -1,6 +1,16 @@
 class World {
   character = new Character();
-  enemies = [new Chicken(getRandomPosition()), new Chicken(getRandomPosition()), new Chicken(getRandomPosition())];
+  enemies = [
+    new Chicken(), 
+    new Chicken(), 
+    new Chicken()
+  ];
+  clouds = [
+    new Cloud()
+  ];
+  backgroundObjects = [
+    new BackgroundObject('img/5_background/layers/1_first_layer/1.png')
+  ]
   ctx;
   canvas;
 
@@ -13,20 +23,27 @@ class World {
   draw(){
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.ctx.drawImage(this.character.img, this.character.x, this.character.y, this.character.height, this.character.width);
+    this.addToMap(this.character);
 
-    this.enemies.forEach(enemy => {
-        this.ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.height, enemy.width);
-    });
+    this.addObjectsToMap(this.clouds);
+    this.addObjectsToMap(this.enemies);
+    this.addObjectsToMap(this.backgroundObjects);
 
     let self = this;
     requestAnimationFrame(function(){
         self.draw();
     })
   }
+
+  addObjectsToMap(objects){  //iterates through all elements in the given array and returns every element to addToMap()
+    objects.forEach(obj => {
+      this.addToMap(obj);    
+    });
+  }
+
+  addToMap(movObj){  //draws the given object
+    this.ctx.drawImage(movObj.img, movObj.x, movObj.y, movObj.width, movObj.height);
+  }
+
 }
 
-function getRandomPosition(){
-    let x = 200+ Math.random() *400;
-    return x;
-}
