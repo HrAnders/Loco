@@ -5,6 +5,7 @@ class MovableObject{
     height = 75;
     width = 150;
     imageCache = {};
+    speed = 0.15;
 
     loadImage(path){
         this.img = new Image(); // entspricht dem img-tag in html --> this.img = document.getElementById('image) --> <img id="image">
@@ -30,6 +31,8 @@ class MovableObject{
     }
 
     moveLeft(){
-
+        setInterval(()=>{
+            this.x -= this.speed;
+            },1000/60) //entspricht 60fps
     }
 }
