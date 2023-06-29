@@ -6,6 +6,7 @@ class MovableObject{
     width = 150;
     imageCache = {};
     speed = 0.15;
+    facesOtherDirection = false;
 
     loadImage(path){
         this.img = new Image(); // entspricht dem img-tag in html --> this.img = document.getElementById('image) --> <img id="image">

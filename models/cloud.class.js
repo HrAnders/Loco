@@ -1,8 +1,6 @@
 class Cloud extends MovableObject{
     height = 200;
     width = 400;
-    ctx = canvas.getContext("2d");
-    
 
     constructor(){
         super().loadImage('img/5_background/layers/4_clouds/1.png');
