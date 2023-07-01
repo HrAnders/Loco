@@ -2,6 +2,7 @@ class Character extends MovableObject {
   width = 100;
   height = 250;
   speed = 10;
+  y = 80;
 
   IMAGES_WALKING = [
     "../img/2_character_pepe/2_walk/W-21.png",
@@ -12,51 +13,81 @@ class Character extends MovableObject {
     "../img/2_character_pepe/2_walk/W-26.png",
   ];
 
+  IMAGES_JUMPING = [
+    "img/2_character_pepe/3_jump/J-31.png",
+    "img/2_character_pepe/3_jump/J-32.png",
+    "img/2_character_pepe/3_jump/J-33.png",
+    "img/2_character_pepe/3_jump/J-34.png",
+    "img/2_character_pepe/3_jump/J-35.png",
+    "img/2_character_pepe/3_jump/J-36.png",
+    "img/2_character_pepe/3_jump/J-37.png",
+    "img/2_character_pepe/3_jump/J-38.png",
+    "img/2_character_pepe/3_jump/J-39.png",
+
+  ]
+
+
   world;
 
   currentImage = 0;
 
+  walking_sound = new Audio('audio/walking.mp3')
+
   constructor() {
     super().loadImage("../img/2_character_pepe/1_idle/idle/I-1.png");
     this.loadImages(this.IMAGES_WALKING);
+    this.loadImages(this.IMAGES_JUMPING);
     this.animate();
+    this.applyGravity();
   }
 
-  jump() {}
 
   animate() {
-    this.animateWalk();
-  }
-
-  animateWalk() {
+    this.walking_sound.pause();
     setInterval(() => {
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-        this.x += this.speed;
+        this.moveRight();
         this.facesOtherDirection = false;
+        this.walking_sound.play();
       }
 
       if (this.world.keyboard.LEFT && this.x > 0) {
-        this.x -= this.speed;
+        this.moveLeft();
         this.facesOtherDirection = true;
+        this.walking_sound.play();
       }
-      this.world.camera_x = -this.x+100;
+
+      if(this.world.keyboard.SPACE  && !this.isAboveGround()){
+        this.jump()
+     }
+
+     this.world.camera_x = -this.x+100;
+
     }, 1000 / 30);
 
     setInterval(() => {
-      if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-        //walk animation
-        let i = this.currentImage % this.IMAGES_WALKING.length; //modulo-fkt berechnet rest: z.b. 1 / 6 --> ergebnis 0, rest 1
-        let path = this.IMAGES_WALKING[i]; // das i entspricht dem modulo-rest; es kann nicht außerhalb der length liegen
-        this.img = this.imageCache[path];
-        this.currentImage++;
+
+      if(this.isAboveGround()){
+        this.playAnimation(this.IMAGES_JUMPING);
       }
-      
-      if (this.facesOtherDirection == true){
-        
+      else{
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+          //walk animation
+          this.playAnimation(this.IMAGES_WALKING);
+        }
+    
+        if (this.facesOtherDirection == true){
+        }
       }
 
 
     }, 50);
   }
 
+ 
+
+ 
+
 }
+
+
