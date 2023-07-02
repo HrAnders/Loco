@@ -7,7 +7,7 @@ function init() {
   world = new World(canvas, keyboard);
 
   console.log("My character is ", world.character);
-  console.log("Enemies are ", world.enemies);
+  console.log("Enemies are ", world.level.enemies);
 }
 
 window.addEventListener("keydown", (e) => {
