@@ -1,10 +1,4 @@
-class MovableObject {
-  x = 120;
-  y = 180;
-  img;
-  height = 75;
-  width = 150;
-  imageCache = {};
+class MovableObject extends DrawableObject{
   speed = 0.15;
   facesOtherDirection = false;
   speedY = 0;
@@ -15,6 +9,11 @@ class MovableObject {
     right: 0,
     bottom: 0
   }
+  energy = 100;
+
+  lastHit = 0;
+
+  
 
   applyGravity() {
     setInterval(() => {
@@ -31,15 +30,6 @@ class MovableObject {
 
   isAboveGround() {
     return this.y < 180;
-  }
-
-  loadImage(path) {
-    this.img = new Image(); // entspricht dem img-tag in html --> this.img = document.getElementById('image) --> <img id="image">
-    this.img.src = path;
-  }
-
-  draw(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
 
   drawCollisionBoxes(ctx) {
@@ -83,19 +73,7 @@ class MovableObject {
 
 }
 
-  /**
-   *
-   * @param {Array} arr - array with image paths
-   */
-  loadImages(arr) {
-    //der funktion wird ein array mit img-pfaden übergeben
-    arr.forEach((path) => {
-      //aus jedem pfad des arrays wird ein image-objekt gemacht, indem die source des neuen img-objekts aus dem arraypfad gespeist wird
-      let img = new Image();
-      img.src = path;
-      this.imageCache[path] = img; //dem imagecache-array wird beim key "path" der value "img" zugefügt --> so stehen alle img-objekte dann im image-cache
-    });
-  }
+  
 
   moveRight() {
     this.x += this.speed;
@@ -106,9 +84,29 @@ class MovableObject {
   }
 
   playAnimation(images) {
-    let i = this.currentImage % this.IMAGES_WALKING.length; //modulo-fkt berechnet rest: z.b. 1 / 6 --> ergebnis 0, rest 1
+    let i = this.currentImage % images.length; //modulo-fkt berechnet rest: z.b. 1 / 6 --> ergebnis 0, rest 1
     let path = images[i]; // das i entspricht dem modulo-rest; es kann nicht außerhalb der length liegen
     this.img = this.imageCache[path];
     this.currentImage++;
+  }
+
+  hit() {
+    this.energy -= 10;
+    if (this.energy < 0) {
+      this.energy = 0;
+    }
+    else{
+      this.lastHit = new Date().getTime();
+    }
+  }
+
+  isHurt(){
+    let timePassed = new Date().getTime() - this.lastHit;
+    timePassed = timePassed / 1000;
+    return timePassed < 1;
+  }
+
+  isDead(){
+    return this.energy == 0;
   }
 }
