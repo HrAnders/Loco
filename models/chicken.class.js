@@ -17,8 +17,6 @@ class Chicken extends MovableObject{
 
     currentImage = 0;
     speed = Math.random()*((0.3 - 0.05) +0.05);
-
-
     
     constructor(){
         super().loadImage('img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');

@@ -81,8 +81,7 @@ class Character extends MovableObject {
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
         this.jump();
       }
-
-      this.world.camera_x = -this.x + 100;
+      this.changeCameraPosition();
     }, 1000 / 30);
 
     setInterval(() => {
@@ -102,5 +101,10 @@ class Character extends MovableObject {
         }
       }
     }, 50);
+  }
+
+  changeCameraPosition() {
+    this.world.camera_x = -this.x + 100;
+    this.world.healthBar.x = this.x - 60;
   }
 }

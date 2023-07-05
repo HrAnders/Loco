@@ -1,5 +1,7 @@
 class World {
   character = new Character();
+  healthBar = new Healthbar();
+  throwableObjects = []
   level = level1;
   ctx;
   canvas;
@@ -12,23 +14,36 @@ class World {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
-    this.checkCollisions();
+    this.updateWorldData();
   }
 
-  setWorld() {
+  setWorld() {  //get access to world class from other classes
     this.character.world = this;
+    this.healthBar.world = this;
+  }
+
+  updateWorldData(){
+    setInterval(() => {
+      this.checkCollisions();
+      this.checkThrow();
+    }, 200);
   }
 
   checkCollisions(){
-    setInterval(() => {
-
-      this.level.enemies.forEach((enemy) => {
-        if (this.character.isColliding(enemy)) {
-          this.character.hit();
-        }
-      })
-    }, 200);
+    this.level.enemies.forEach((enemy) => {
+      if (this.character.isColliding(enemy)) {
+        this.character.hit();
+      }
+    })
   }
+
+  checkThrow(){
+    if (this.keyboard.CTRL) {
+      let bottle = new ThrowableObject(this.character.x + 50, this.character.y+100);
+      this.throwableObjects.push(bottle);
+    }
+  }
+
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -36,8 +51,11 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addObjectsToMap(this.level.backgroundObjects);
+    this.addStatusBars(this.healthBar)
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.collectibles)
+    this.addObjectsToMap(this.throwableObjects);
 
     this.addToMap(this.character);
 
@@ -66,9 +84,14 @@ class World {
 
     movObj.drawCollisionBoxes(this.ctx);
     movObj.drawOffsetBoxes(this.ctx);
+    
 
     if (movObj.facesOtherDirection) {
       movObj.flipImageBack(this.ctx);
     }
+  }
+
+  addStatusBars(bar){
+    bar.draw(this.ctx);
   }
 }

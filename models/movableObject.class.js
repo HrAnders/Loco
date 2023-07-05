@@ -1,4 +1,4 @@
-class MovableObject extends DrawableObject{
+class MovableObject extends DrawableObject {
   speed = 0.15;
   facesOtherDirection = false;
   speedY = 0;
@@ -7,13 +7,11 @@ class MovableObject extends DrawableObject{
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
-  }
+    bottom: 0,
+  };
   energy = 100;
 
   lastHit = 0;
-
-  
 
   applyGravity() {
     setInterval(() => {
@@ -29,27 +27,12 @@ class MovableObject extends DrawableObject{
   }
 
   isAboveGround() {
+    if (this instanceof ThrowableObject){
+      return true;
+    } else {
     return this.y < 180;
   }
 
-  drawCollisionBoxes(ctx) {
-    if (this instanceof Character || this instanceof Chicken) {
-      ctx.beginPath();
-      ctx.lineWidth = "5";
-      ctx.strokeStyle = "blue";
-      ctx.rect(this.x, this.y, this.width, this.height);
-      ctx.stroke();
-    }
-  }
-
-  drawOffsetBoxes(ctx) {
-    if (this instanceof Character || this instanceof Chicken) {
-      ctx.beginPath();
-      ctx.lineWidth = "5";
-      ctx.strokeStyle = "red";
-      ctx.rect(this.x + this.offset.left, this.y + this.offset.bottom, this.width - this.offset.right, this.height-this.offset.bottom);
-      ctx.stroke();
-    }
   }
 
   flipImage(ctx) {
@@ -65,15 +48,15 @@ class MovableObject extends DrawableObject{
   }
 
   // Bsp.: character.isColliding(chicken)
-  isColliding (obj) {
-    return  (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && 
-            (this.x + this.offset.bottom + this.height) >= obj.y &&
-            (this.y + this.offset.bottom) <= (obj.y + obj.height) //&& 
-            //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
-
-}
-
-  
+  isColliding(obj) {
+    return (
+      this.x + this.width >= obj.x &&
+      this.x <= obj.x + obj.width &&
+      this.x + this.offset.bottom + this.height >= obj.y &&
+      this.y + this.offset.bottom <= obj.y + obj.height
+    ); //&&
+    //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
+  }
 
   moveRight() {
     this.x += this.speed;
@@ -91,22 +74,23 @@ class MovableObject extends DrawableObject{
   }
 
   hit() {
-    this.energy -= 10;
     if (this.energy < 0) {
       this.energy = 0;
-    }
-    else{
+    } else {
+      if (!this.isHurt()) {
+        this.energy -= 20;
+      }
       this.lastHit = new Date().getTime();
     }
   }
 
-  isHurt(){
+  isHurt() {
     let timePassed = new Date().getTime() - this.lastHit;
     timePassed = timePassed / 1000;
-    return timePassed < 1;
+    return timePassed < 2;
   }
 
-  isDead(){
+  isDead() {
     return this.energy == 0;
   }
 }
