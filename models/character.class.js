@@ -3,12 +3,14 @@ class Character extends MovableObject {
   height = 250;
   speed = 10;
   y = 80;
+  bottleAmount = 0;
   offset = {
     top: 150,
     left: 20,
     right: 30,
     bottom: 100,
   };
+
 
   IMAGES_WALKING = [
     "../img/2_character_pepe/2_walk/W-21.png",
@@ -106,5 +108,14 @@ class Character extends MovableObject {
   changeCameraPosition() {
     this.world.camera_x = -this.x + 100;
     this.world.healthBar.x = this.x - 60;
+    this.world.salsaBar.x = this.x -60;
+  }
+
+  collectBottle(){
+    this.bottleAmount += 10;
+  };
+
+  reduceBottles(){
+    this.bottleAmount -= 10;
   }
 }

@@ -1,6 +1,7 @@
 class World {
   character = new Character();
   healthBar = new Healthbar();
+  salsaBar = new SalsaBar();
   throwableObjects = []
   level = level1;
   ctx;
@@ -20,6 +21,8 @@ class World {
   setWorld() {  //get access to world class from other classes
     this.character.world = this;
     this.healthBar.world = this;
+    this.salsaBar.world = this;
+    this.level.world = this;
   }
 
   updateWorldData(){
@@ -29,23 +32,36 @@ class World {
     }, 200);
   }
 
-  checkCollisions(){
+  checkCollisions() {
+    this.checkEnemyCollision();
+  
+    this.checkCollectibleCollision();
+  }
+
+  checkEnemyCollision(){
     this.level.enemies.forEach((enemy) => {
       if (this.character.isColliding(enemy)) {
         this.character.hit();
       }
     });
-    this.level.collectibles.forEach((collectible) => {
-      if (this.character.isColliding(collectible)) {
-        collectible.height = 0;
+  }
+
+  checkCollectibleCollision(){
+    this.level.collectibles.forEach((collectible, index) => {
+      if (this.character.isColliding(collectible) && collectible instanceof Bottle) {
+          this.character.collectBottle();
+          this.level.collectibles.splice(index, 1);
+          collectible = null; 
       }
     });
   }
+  
 
   checkThrow(){
     if (this.keyboard.CTRL) {
       let bottle = new ThrowableObject(this.character.x + 50, this.character.y+100);
       this.throwableObjects.push(bottle);
+      this.character.reduceBottles();
     }
   }
 
@@ -56,7 +72,9 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addObjectsToMap(this.level.backgroundObjects);
-    this.addStatusBars(this.healthBar)
+    this.addStatusBars(this.healthBar);
+    this.addStatusBars(this.salsaBar);
+
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.collectibles)

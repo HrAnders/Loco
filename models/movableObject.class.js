@@ -10,7 +10,6 @@ class MovableObject extends DrawableObject {
     bottom: 0,
   };
   energy = 100;
-
   lastHit = 0;
 
   applyGravity() {
@@ -74,6 +73,8 @@ class MovableObject extends DrawableObject {
       this.lastHit = new Date().getTime();
     }
   }
+
+
 
   isHurt() {
     let timePassed = new Date().getTime() - this.lastHit;
