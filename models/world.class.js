@@ -34,7 +34,12 @@ class World {
       if (this.character.isColliding(enemy)) {
         this.character.hit();
       }
-    })
+    });
+    this.level.collectibles.forEach((collectible) => {
+      if (this.character.isColliding(collectible)) {
+        collectible.height = 0;
+      }
+    });
   }
 
   checkThrow(){
