@@ -67,11 +67,16 @@ class World {
       this.throwableObjects.forEach((throwable, throwableIndex) => {
         if (enemy.isColliding(throwable) && enemy instanceof Endboss) {
           throwable.playSplashAnimation();
-          enemy.playHurtAnimation();
           if (!throwable.causesDamage) {
             enemy.reduceHealth();
             throwable.causesDamage = true;
           } //this.throwableObjects.splice(throwableIndex, 1);
+          if(enemy.health<10){
+            enemy.playDeathAnimation();
+          }
+          else{
+            enemy.playHurtAnimation();
+          }
         }
       });
     });
