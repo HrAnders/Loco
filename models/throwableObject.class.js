@@ -18,6 +18,7 @@ class ThrowableObject extends MovableObject{
     ];
 
     isCollided = false;
+    causesDamage = false;
     currentImage = 0;
 
     constructor(x,y){

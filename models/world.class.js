@@ -2,7 +2,7 @@ class World {
   character = new Character();
   healthBar = new Healthbar();
   salsaBar = new SalsaBar();
-  throwableObjects = []
+  throwableObjects = [];
   level = level1;
   ctx;
   canvas;
@@ -18,14 +18,15 @@ class World {
     this.updateWorldData();
   }
 
-  setWorld() {  //get access to world class from other classes
+  setWorld() {
+    //get access to world class from other classes
     this.character.world = this;
     this.healthBar.world = this;
     this.salsaBar.world = this;
     this.level.world = this;
   }
 
-  updateWorldData(){
+  updateWorldData() {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrow();
@@ -34,13 +35,13 @@ class World {
 
   checkCollisions() {
     this.checkEnemyCollision();
-  
+
     this.checkCollectibleCollision();
 
     this.checkBottleCollision();
   }
 
-  checkEnemyCollision(){
+  checkEnemyCollision() {
     this.level.enemies.forEach((enemy) => {
       if (this.character.isColliding(enemy)) {
         this.character.hit();
@@ -48,43 +49,53 @@ class World {
     });
   }
 
-  checkCollectibleCollision(){
+  checkCollectibleCollision() {
     this.level.collectibles.forEach((collectible, index) => {
-      if (this.character.isColliding(collectible) && collectible instanceof Bottle) {
-          this.character.collectBottle();
-          this.level.collectibles.splice(index, 1);
-          collectible = null; 
+      if (
+        this.character.isColliding(collectible) &&
+        collectible instanceof Bottle
+      ) {
+        this.character.collectBottle();
+        this.level.collectibles.splice(index, 1);
+        collectible = null;
       }
     });
   }
 
-  checkBottleCollision(){
+  checkBottleCollision() {
     this.level.enemies.forEach((enemy, enemyIndex) => {
-      this.throwableObjects.forEach((throwable,throwableIndex) => {
+      this.throwableObjects.forEach((throwable, throwableIndex) => {
         if (enemy.isColliding(throwable) && enemy instanceof Endboss) {
           throwable.playSplashAnimation();
           enemy.playHurtAnimation();
-          //this.throwableObjects.splice(throwableIndex, 1);
-          
+          if (!throwable.causesDamage) {
+            enemy.reduceHealth();
+            throwable.causesDamage = true;
+          } //this.throwableObjects.splice(throwableIndex, 1);
         }
       });
     });
   }
-  
 
   checkThrow() {
-    if (this.keyboard.CTRL && !this.isThrowing && this.character.bottleAmount>0) {
+    if (
+      this.keyboard.CTRL &&
+      !this.isThrowing &&
+      this.character.bottleAmount > 0
+    ) {
       this.isThrowing = true;
-      let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100);
+      let bottle = new ThrowableObject(
+        this.character.x + 50,
+        this.character.y + 100
+      );
       this.throwableObjects.push(bottle);
       this.character.reduceBottles();
-  
+
       setTimeout(() => {
         this.isThrowing = false;
-      }, 1000); 
+      }, 1000);
     }
   }
-
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -97,7 +108,7 @@ class World {
 
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
-    this.addObjectsToMap(this.level.collectibles)
+    this.addObjectsToMap(this.level.collectibles);
     this.addObjectsToMap(this.throwableObjects);
 
     this.addToMap(this.character);
@@ -127,14 +138,13 @@ class World {
 
     movObj.drawCollisionBoxes(this.ctx);
     movObj.drawOffsetBoxes(this.ctx);
-    
 
     if (movObj.facesOtherDirection) {
       movObj.flipImageBack(this.ctx);
     }
   }
 
-  addStatusBars(bar){
+  addStatusBars(bar) {
     bar.draw(this.ctx);
   }
 }
