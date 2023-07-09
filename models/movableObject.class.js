@@ -56,13 +56,6 @@ class MovableObject extends DrawableObject {
     this.x -= this.speed;
   }
 
-  playAnimation(images) {
-    let i = this.currentImage % images.length; //modulo-fkt berechnet rest: z.b. 1 / 6 --> ergebnis 0, rest 1
-    let path = images[i]; // das i entspricht dem modulo-rest; es kann nicht außerhalb der length liegen
-    this.img = this.imageCache[path];
-    this.currentImage++;
-  }
-
   hit() {
     if (this.energy < 0) {
       this.energy = 0;

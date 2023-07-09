@@ -34,10 +34,11 @@ class Endboss extends MovableObject{
     animate(images){
         setInterval(() => {
             this.playAnimation(images);
-        }, 200);
+        }, 300);
     }
 
     playHurtAnimation(){
-
+        console.log("endboss hurted")
+        this.animate(this.IMAGES_HURT)
     }
 }

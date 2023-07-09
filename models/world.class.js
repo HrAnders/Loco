@@ -29,7 +29,7 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrow();
-    }, 200);
+    }, 50);
   }
 
   checkCollisions() {
@@ -63,8 +63,9 @@ class World {
       this.throwableObjects.forEach((throwable,throwableIndex) => {
         if (enemy.isColliding(throwable) && enemy instanceof Endboss) {
           throwable.playSplashAnimation();
-          this.throwableObjects.splice(throwableIndex, 1);
-          this.level.enemies.splice(enemyIndex, 1);
+          enemy.playHurtAnimation();
+          //this.throwableObjects.splice(throwableIndex, 1);
+          
         }
       });
     });
