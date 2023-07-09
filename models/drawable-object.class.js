@@ -41,7 +41,7 @@ class DrawableObject {
   }
 
   drawOffsetBoxes(ctx) {
-    if (this instanceof Character || this instanceof Chicken) {
+    if (this instanceof Character || this instanceof Chicken || this instanceof Endboss) {
       ctx.beginPath();
       ctx.lineWidth = "5";
       ctx.strokeStyle = "red";
@@ -59,5 +59,12 @@ class DrawableObject {
       this.y + this.offset.bottom <= obj.y + obj.height
     ); //&&
     //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
+  }
+
+  playAnimation(images) {
+    let i = this.currentImage % images.length; //modulo-fkt berechnet rest: z.b. 1 / 6 --> ergebnis 0, rest 1
+    let path = images[i]; // das i entspricht dem modulo-rest; es kann nicht außerhalb der length liegen
+    this.img = this.imageCache[path];
+    this.currentImage++;
   }
 }

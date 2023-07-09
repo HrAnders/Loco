@@ -36,6 +36,8 @@ class World {
     this.checkEnemyCollision();
   
     this.checkCollectibleCollision();
+
+    this.checkBottleCollision();
   }
 
   checkEnemyCollision(){
@@ -53,6 +55,18 @@ class World {
           this.level.collectibles.splice(index, 1);
           collectible = null; 
       }
+    });
+  }
+
+  checkBottleCollision(){
+    this.level.enemies.forEach((enemy, enemyIndex) => {
+      this.throwableObjects.forEach((throwable,throwableIndex) => {
+        if (enemy.isColliding(throwable) && enemy instanceof Endboss) {
+          throwable.playSplashAnimation();
+          this.throwableObjects.splice(throwableIndex, 1);
+          this.level.enemies.splice(enemyIndex, 1);
+        }
+      });
     });
   }
   
