@@ -116,6 +116,11 @@ class Character extends MovableObject {
   };
 
   reduceBottles(){
-    this.bottleAmount -= 10;
+    if (this.bottleAmount>0) {
+      this.bottleAmount -= 10;
+    }
+    else{
+      this.bottleAmount = 0;
+    }
   }
 }

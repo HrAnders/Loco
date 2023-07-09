@@ -72,11 +72,16 @@ class World {
   }
   
 
-  checkThrow(){
-    if (this.keyboard.CTRL) {
-      let bottle = new ThrowableObject(this.character.x + 50, this.character.y+100);
+  checkThrow() {
+    if (this.keyboard.CTRL && !this.isThrowing && this.character.bottleAmount>0) {
+      this.isThrowing = true;
+      let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100);
       this.throwableObjects.push(bottle);
       this.character.reduceBottles();
+  
+      setTimeout(() => {
+        this.isThrowing = false;
+      }, 1000); 
     }
   }
 
