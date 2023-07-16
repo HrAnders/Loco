@@ -6,6 +6,12 @@ class DrawableObject {
   y = 180;
   height = 75;
   width = 150;
+   offset = {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  };
 
   loadImage(path) {
     this.img = new Image(); // entspricht dem img-tag in html --> this.img = document.getElementById('image) --> <img id="image">
@@ -41,11 +47,11 @@ class DrawableObject {
   }
 
   drawOffsetBoxes(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Endboss) {
+    if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject) {
       ctx.beginPath();
       ctx.lineWidth = "5";
       ctx.strokeStyle = "red";
-      ctx.rect(this.x + this.offset.left, this.y + this.offset.bottom, this.width - this.offset.right, this.height-this.offset.bottom);
+      ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.right, this.height-this.offset.bottom);
       ctx.stroke();
     }
   }
@@ -53,10 +59,10 @@ class DrawableObject {
   // Bsp.: character.isColliding(chicken)
   isColliding(obj) {
     return (
-      this.x + this.width >= obj.x &&
-      this.x <= obj.x + obj.width &&
-      this.x + this.offset.bottom + this.height >= obj.y &&
-      this.y + this.offset.bottom <= obj.y + obj.height
+      (this.x + this.width - this.offset.right) >= obj.x + obj.offset.left &&  // R-L-Abfrage 
+      (this.x + this.offset.left) <= (obj.x + obj.width - obj.offset.right) && // L-R-Abfrage
+      (this.y + this.offset.top + this.offset.bottom) >= obj.y + obj.offset.top &&  // T-B-Abfrage
+      (this.y + this.offset.top) <= (obj.y + obj.height - obj.offset.bottom) // B-T-Abfrage
     ); //&&
     //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
   }

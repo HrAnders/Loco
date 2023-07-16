@@ -5,7 +5,7 @@ class Character extends MovableObject {
   y = 80;
   bottleAmount = 0;
   offset = {
-    top: 150,
+    top: 100,
     left: 20,
     right: 30,
     bottom: 100,

@@ -66,21 +66,21 @@ class World {
     this.level.enemies.forEach((enemy, enemyIndex) => {
       this.throwableObjects.forEach((throwable, throwableIndex) => {
         if (enemy.isColliding(throwable) && enemy instanceof Endboss) {
+          console.log("Collision");
           throwable.playSplashAnimation();
-          if (!throwable.causesDamage) {
+          if (!throwable.causesDamage && !enemy.isDead) {
             enemy.reduceHealth();
             throwable.causesDamage = true;
-          } //this.throwableObjects.splice(throwableIndex, 1);
-          if(enemy.health<10){
-            enemy.playDeathAnimation();
-          }
-          else{
             enemy.playHurtAnimation();
+            if (enemy.health < 10) {
+              enemy.playDeathAnimation();
+            }
           }
         }
       });
     });
   }
+  
 
   checkThrow() {
     if (
