@@ -19,7 +19,7 @@ class World {
   }
 
   setWorld() {
-    //get access to world class from other classes
+    //get access to other classes from world class  
     this.character.world = this;
     this.healthBar.world = this;
     this.salsaBar.world = this;
@@ -43,10 +43,9 @@ class World {
 
   checkEnemyCollision() {
     this.level.enemies.forEach((enemy) => {
-      if (this.character.isTopColliding(enemy) && enemy instanceof Chicken && this.character.isAboveGround()) {
-        console.log("top collision detected");
-        //enemy.playDeathAnimation();
-      } else if (!this.character.isJumping && this.character.isColliding(enemy)) {
+      if (this.character.isColliding(enemy) && this.character.isTopColliding(enemy) && enemy instanceof Chicken) {
+        enemy.playDeathAnimation();
+      } else if (!this.character.isJumping && this.character.isColliding(enemy) && !enemy.isDead) {
         this.character.hit();
       }
     });
@@ -70,7 +69,6 @@ class World {
     this.level.enemies.forEach((enemy, enemyIndex) => {
       this.throwableObjects.forEach((throwable, throwableIndex) => {
         if (enemy.isColliding(throwable) && enemy instanceof Endboss) {
-          console.log("Collision");
           throwable.playSplashAnimation();
           if (!throwable.causesDamage && !enemy.isDead) {
             enemy.reduceHealth();
@@ -111,8 +109,8 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addObjectsToMap(this.level.backgroundObjects);
-    this.addStatusBars(this.healthBar);
-    this.addStatusBars(this.salsaBar);
+    this.addUIElement(this.healthBar);
+    this.addUIElement(this.salsaBar);
 
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
@@ -152,7 +150,7 @@ class World {
     }
   }
 
-  addStatusBars(bar) {
-    bar.draw(this.ctx);
+  addUIElement(elem) {
+    elem.draw(this.ctx);
   }
 }

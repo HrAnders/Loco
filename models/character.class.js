@@ -85,7 +85,6 @@ class Character extends MovableObject {
         this.jump();
       }
       this.changeCameraPosition();
-      console.log(this.isJumping)
     }, 1000 / 30);
 
     setInterval(() => {

@@ -1,6 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let isFullScreen = false;
 
 function init() {
   canvas = document.getElementById("canvas");
@@ -8,6 +9,38 @@ function init() {
 
   console.log("My character is ", world.character);
   console.log("Enemies are ", world.level.enemies);
+}
+
+function goFullScreen() {
+  if (canvas.requestFullscreen) {
+    canvas.requestFullscreen();
+  } else if (canvas.webkitRequestFullscreen) {
+    canvas.webkitRequestFullscreen();
+  } else if (canvas.mozRequestFullScreen) {
+    canvas.mozRequestFullScreen();
+  }
+  isFullScreen = true;
+}
+
+
+function goMinScreen(){
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) { /* Safari */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE11 */
+    document.msExitFullscreen();
+  }
+  isFullScreen = false;
+}
+
+
+function toggleFullScreen(){
+  if (!isFullScreen) {
+    goFullScreen();
+  } else {
+    goMinScreen();
+  }
 }
 
 window.addEventListener("keydown", (e) => {

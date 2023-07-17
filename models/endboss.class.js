@@ -54,8 +54,6 @@ class Endboss extends MovableObject {
   }
   
   
-  
-
   playHurtAnimation() {
     this.animate(this.IMAGES_HURT);
   }

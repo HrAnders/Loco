@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="img/6_salsa_bottle/salsa_bottle.png">
-    
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="img/6_salsa_bottle/salsa_bottle.png"
+    />
+
     <script src="models/drawable-object.class.js"></script>
     <script src="models/movableObject.class.js"></script>
     <script src="models/character.class.js"></script>
@@ -25,14 +29,17 @@
     <script src="models/level.class.js"></script>
     <script src="levels/level1.js"></script>
     <script src="js/game.js"></script>
-</head>
-<body onload="init()">
+  </head>
 
+  <body onload="init()">
     <h1>El pollo loco</h1>
 
-    <canvas id="canvas" width="720" height="480"></canvas>
-
+    <div id="container">
+      <canvas id="canvas" width="720" height="480"></canvas>
+      <menu id="controls">
+        <img src="img/fullscreen-12-64.ico" alt="" onclick="toggleFullScreen()">
+      </menu>
+    </div>
     
-    
-</body>
+  </body>
 </html>
