@@ -8,6 +8,7 @@ class World {
   canvas;
   keyboard;
   camera_x = 0;
+  backgroundMusic = new Audio("audio/background_music.mp3");
 
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
@@ -16,6 +17,8 @@ class World {
     this.draw();
     this.setWorld();
     this.updateWorldData();
+    this.backgroundMusic.play();
+    this.backgroundMusic.loop = true;
   }
 
   setWorld() {
@@ -142,8 +145,8 @@ class World {
 
     movObj.draw(this.ctx);
 
-    movObj.drawCollisionBoxes(this.ctx);
-    movObj.drawOffsetBoxes(this.ctx);
+    //movObj.drawCollisionBoxes(this.ctx);
+    //movObj.drawOffsetBoxes(this.ctx); 
 
     if (movObj.facesOtherDirection) {
       movObj.flipImageBack(this.ctx);

@@ -10,6 +10,8 @@ class Chicken extends MovableObject {
   };
   jumpThreshold = 20;
   isDead = false;
+  deathSound = new Audio("audio/chicken.mp3");
+
 
   IMAGES_WALKING = [
     "img/3_enemies_chicken/chicken_normal/1_walk/1_w.png",
@@ -39,6 +41,7 @@ class Chicken extends MovableObject {
   }
 
   playDeathAnimation() {
+    this.deathSound.play();
     this.isDead = true;
     clearInterval(this.animationInterval); // Lösche das aktive Animation-Intervall
     this.loadImage("img/3_enemies_chicken/chicken_normal/2_dead/dead.png");
