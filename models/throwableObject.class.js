@@ -20,6 +20,7 @@ class ThrowableObject extends MovableObject{
     isCollided = false;
     causesDamage = false;
     currentImage = 0;
+    
 
     constructor(x,y){
         super().loadImage('img/6_salsa_bottle/salsa_bottle.png');

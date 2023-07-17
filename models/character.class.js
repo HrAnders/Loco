@@ -8,7 +8,7 @@ class Character extends MovableObject {
     top: 100,
     left: 20,
     right: 30,
-    bottom: 100,
+    bottom: 110,
   };
 
 
@@ -63,6 +63,7 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_HURT);
     this.animate();
     this.applyGravity();
+    this.checkJumpState();
   }
 
   animate() {
@@ -84,6 +85,7 @@ class Character extends MovableObject {
         this.jump();
       }
       this.changeCameraPosition();
+      console.log(this.isJumping)
     }, 1000 / 30);
 
     setInterval(() => {
@@ -123,4 +125,16 @@ class Character extends MovableObject {
       this.bottleAmount = 0;
     }
   }
+
+  checkJumpState(){
+    setInterval(() => {
+      if (this.y >= 180) {
+      this.isJumping = false;        
+      }
+      else{
+        this.isJumping = true;
+      }
+    }, 100);
+  }
+
 }

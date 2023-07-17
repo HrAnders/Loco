@@ -7,7 +7,9 @@ class Chicken extends MovableObject{
         left: 0,
         right: 0,
         bottom: 0
-      }
+      };
+    jumpThreshold = 20;
+
 
     IMAGES_WALKING = [
         'img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',  

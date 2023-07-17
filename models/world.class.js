@@ -43,11 +43,15 @@ class World {
 
   checkEnemyCollision() {
     this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy)) {
+      if (this.character.isTopColliding(enemy) && enemy instanceof Chicken && this.character.isAboveGround()) {
+        console.log("top collision detected");
+        //enemy.playDeathAnimation();
+      } else if (!this.character.isJumping && this.character.isColliding(enemy)) {
         this.character.hit();
       }
     });
   }
+  
 
   checkCollectibleCollision() {
     this.level.collectibles.forEach((collectible, index) => {
@@ -80,7 +84,6 @@ class World {
       });
     });
   }
-  
 
   checkThrow() {
     if (

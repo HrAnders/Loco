@@ -67,6 +67,17 @@ class DrawableObject {
     //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
   }
 
+  isTopColliding(obj) {
+    return (
+      this.isJumping &&  // Überprüfe, ob der Character sich im Sprung befindet
+      this.y + this.offset.top <= obj.y + obj.height - obj.offset.bottom &&  // Überprüfe, ob der Character von oben auf das Chicken trifft
+      (this.y + this.offset.top + this.offset.bottom) >= obj.y + obj.offset.top &&  
+      (this.y + this.offset.top + this.offset.bottom) <= (obj.y + obj.offset.top + obj.jumpThreshold)
+    );
+  }
+  
+  
+
   playAnimation(images) {
     let i = this.currentImage % images.length; //modulo-fkt berechnet rest: z.b. 1 / 6 --> ergebnis 0, rest 1
     let path = images[i]; // das i entspricht dem modulo-rest; es kann nicht außerhalb der length liegen
