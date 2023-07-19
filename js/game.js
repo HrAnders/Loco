@@ -35,14 +35,6 @@ function goMinScreen(){
 }
 
 
-function toggleFullScreen(){
-  if (!isFullScreen) {
-    goFullScreen();
-  } else {
-    goMinScreen();
-  }
-}
-
 window.addEventListener("keydown", (e) => {
   switch (e.code) {
     case "KeyD":

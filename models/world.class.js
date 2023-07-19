@@ -22,7 +22,7 @@ class World {
   }
 
   setWorld() {
-    //get access to other classes from world class  
+    //get access to other classes from world class
     this.character.world = this;
     this.healthBar.world = this;
     this.salsaBar.world = this;
@@ -33,8 +33,23 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrow();
+      this.getCharacterPosition();
     }, 50);
   }
+
+  getCharacterPosition() {
+    let charXPos = this.character.x;
+    this.checkCharacterBossDist(charXPos);
+  }
+
+  checkCharacterBossDist(characterXPos) {
+    this.level.enemies.forEach((enemy) => {
+      if (enemy instanceof Endboss && characterXPos > 200) {
+        enemy.playWalkAnimation();
+        console.log("endboss moving");
+      }
+    }
+  )}
 
   checkCollisions() {
     this.checkEnemyCollision();
@@ -46,14 +61,21 @@ class World {
 
   checkEnemyCollision() {
     this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy) && this.character.isTopColliding(enemy) && enemy instanceof Chicken) {
+      if (
+        this.character.isColliding(enemy) &&
+        this.character.isTopColliding(enemy) &&
+        enemy instanceof Chicken
+      ) {
         enemy.playDeathAnimation();
-      } else if (!this.character.isJumping && this.character.isColliding(enemy) && !enemy.isDead) {
+      } else if (
+        !this.character.isJumping &&
+        this.character.isColliding(enemy) &&
+        !enemy.isDead
+      ) {
         this.character.hit();
       }
     });
   }
-  
 
   checkCollectibleCollision() {
     this.level.collectibles.forEach((collectible, index) => {
@@ -93,11 +115,22 @@ class World {
       this.character.bottleAmount > 0
     ) {
       this.isThrowing = true;
-      let bottle = new ThrowableObject(
-        this.character.x + 50,
-        this.character.y + 100
-      );
-      this.throwableObjects.push(bottle);
+      if (!this.character.facesOtherDirection) {
+        let bottle = new ThrowableObject(
+          this.character.x + 50,
+          this.character.y + 100,
+          this.character.facesOtherDirection
+        );
+        this.throwableObjects.push(bottle);
+      } else {
+        let bottle = new ThrowableObject(
+          this.character.x + 10,
+          this.character.y + 100,
+          this.character.facesOtherDirection
+        );
+        this.throwableObjects.push(bottle);
+      }
+
       this.character.reduceBottles();
 
       setTimeout(() => {
@@ -146,7 +179,7 @@ class World {
     movObj.draw(this.ctx);
 
     //movObj.drawCollisionBoxes(this.ctx);
-    //movObj.drawOffsetBoxes(this.ctx); 
+    //movObj.drawOffsetBoxes(this.ctx);
 
     if (movObj.facesOtherDirection) {
       movObj.flipImageBack(this.ctx);
