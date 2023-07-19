@@ -53,11 +53,9 @@ class Endboss extends MovableObject {
 
   animate() {
     clearInterval(this.animationInterval);
-
     if (!this.isDead) {
       this.animationInterval = setInterval(() => {
           this.playIdleAnimation();
-        
       }, 200);
     }
   }
