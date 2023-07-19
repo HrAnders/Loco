@@ -99,11 +99,11 @@ class Character extends MovableObject {
           //walk animation
           this.playAnimation(this.IMAGES_WALKING);
         }
-
-        if (this.facesOtherDirection == true) {
+        else{
+          this.loadImage("../img/2_character_pepe/1_idle/idle/I-1.png");        
         }
       }
-    }, 50);
+    }, 125);
   }
 
   changeCameraPosition() {
