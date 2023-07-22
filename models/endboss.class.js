@@ -4,6 +4,7 @@ class Endboss extends MovableObject {
   currentImage = 0;
   health = 20;
   isDead = false;
+  isHurt = false;
   offset = {
     top: 50,
     left: 0,
@@ -70,7 +71,14 @@ class Endboss extends MovableObject {
   }
 
   playHurtAnimation() {
-    this.animate(this.IMAGES_HURT);
+    clearInterval(this.animationInterval);
+    if (!this.isDead) {
+      this.animationInterval = setInterval(() => {
+        this.playAnimation(this.IMAGES_HURT);      
+      }, 100);
+    }
+    this.playWalkAnimation();
+    this.moveLeft();
   }
 
   playDeathAnimation() {

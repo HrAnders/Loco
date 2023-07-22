@@ -46,7 +46,6 @@ class World {
     this.level.enemies.forEach((enemy) => {
       if (enemy instanceof Endboss && characterXPos > 200) {
         enemy.playWalkAnimation();
-        console.log("endboss moving");
       }
     }
   )}
