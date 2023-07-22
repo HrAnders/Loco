@@ -7,6 +7,8 @@ class MovableObject extends DrawableObject {
   energy = 100;
   lastHit = 0;
 
+  hurtSound = new Audio();
+
   applyGravity() {
     setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
@@ -54,15 +56,15 @@ class MovableObject extends DrawableObject {
   hit() {
     if (this.energy < 0) {
       this.energy = 0;
+      this.playHurtSound();
     } else {
       if (!this.isHurt()) {
         this.energy -= 20;
+        this.playHurtSound();
       }
       this.lastHit = new Date().getTime();
     }
   }
-
-
 
   isHurt() {
     let timePassed = new Date().getTime() - this.lastHit;
@@ -72,5 +74,9 @@ class MovableObject extends DrawableObject {
 
   isDead() {
     return this.energy == 0;
+  }
+
+  playHurtSound(){
+    this.hurtSound.play();
   }
 }

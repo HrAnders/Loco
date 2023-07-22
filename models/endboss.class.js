@@ -5,6 +5,7 @@ class Endboss extends MovableObject {
   health = 20;
   isDead = false;
   isHurt = false;
+  isAggro = false;
   offset = {
     top: 50,
     left: 0,
@@ -12,7 +13,9 @@ class Endboss extends MovableObject {
     bottom: 80,
   };
   y = 50;
-  speed = 10;
+  speed = 2;
+  animationInterval;
+  bar = new BossHP();
 
   IMAGES_IDLE = [
     "img/4_enemie_boss_chicken/2_alert/G5.png",
@@ -54,11 +57,25 @@ class Endboss extends MovableObject {
 
   animate() {
     clearInterval(this.animationInterval);
-    if (!this.isDead) {
-      this.animationInterval = setInterval(() => {
-          this.playIdleAnimation();
-      }, 200);
-    }
+
+    this.animationInterval = setInterval(() => {
+      if (!this.isDead && !this.isAggro && !this.isHurt) {
+        this.playIdleAnimation();
+      } else if(!this.isDead && this.isHurt) {
+        this.playHurtAnimation();
+      }
+      
+      else if (!this.isDead && this.isAggro && !this.isHurt) {
+        this.playWalkAnimation();
+      }
+      
+    }, 200);
+
+    setInterval(() => {
+      if (!this.isDead && this.isAggro && !this.isHurt) {
+        this.moveLeft();
+      }
+    }, 1000/60);
   }
 
   playIdleAnimation() {
@@ -66,28 +83,34 @@ class Endboss extends MovableObject {
   }
 
   playWalkAnimation() {
-    this.moveLeft();
-    this.playAnimation(this.IMAGES_WALKING);
+      this.playAnimation(this.IMAGES_WALKING);
   }
 
   playHurtAnimation() {
     clearInterval(this.animationInterval);
-    if (!this.isDead) {
-      this.animationInterval = setInterval(() => {
-        this.playAnimation(this.IMAGES_HURT);      
-      }, 100);
-    }
-    this.playWalkAnimation();
-    this.moveLeft();
+
+    this.animationInterval = setInterval(() => {
+      this.playAnimation(this.IMAGES_HURT);
+    },200);
+
+    setTimeout(() => {
+      clearInterval(this.animationInterval);
+      this.isHurt = false;
+    this.animate();
+    }, 1500);
+
+    
   }
 
   playDeathAnimation() {
+    clearInterval(this.animationInterval);
     this.loadImage(this.IMAGES_DEAD[2]);
   }
 
   reduceHealth() {
     if (this.health > 0) {
       this.health -= 10;
+      this.isHurt = true;
       if (this.health <= 0) {
         this.isDead = true;
         this.health = 0;

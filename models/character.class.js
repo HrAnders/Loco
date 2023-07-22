@@ -10,7 +10,7 @@ class Character extends MovableObject {
     right: 30,
     bottom: 110,
   };
-
+  isHurted = false;
 
   IMAGES_WALKING = [
     "../img/2_character_pepe/2_walk/W-21.png",
@@ -54,6 +54,7 @@ class Character extends MovableObject {
   currentImage = 0;
 
   walking_sound = new Audio("audio/walking.mp3");
+  hurtSound = new Audio("audio/ouch.mp3");
 
   constructor() {
     super().loadImage("../img/2_character_pepe/1_idle/idle/I-1.png");
@@ -69,27 +70,37 @@ class Character extends MovableObject {
   animate() {
     this.walking_sound.pause();
     setInterval(() => {
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+      if (
+        this.world.keyboard.RIGHT &&
+        this.x < this.world.level.level_end_x &&
+        !this.isDead()
+      ) {
         this.moveRight();
         this.facesOtherDirection = false;
         this.walking_sound.play();
       }
 
-      if (this.world.keyboard.LEFT && this.x > 0) {
+      if (this.world.keyboard.LEFT && this.x > 0 && !this.isDead()) {
         this.moveLeft();
         this.facesOtherDirection = true;
         this.walking_sound.play();
       }
 
-      if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+      if (
+        this.world.keyboard.SPACE &&
+        !this.isAboveGround() &&
+        !this.isDead()
+      ) {
         this.jump();
       }
       this.changeCameraPosition();
     }, 1000 / 30);
 
-    setInterval(() => {
+    let animationInterval = setInterval(() => {
       if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
+        this.speed = 0;
+        clearInterval(animationInterval);
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
       } else if (this.isAboveGround()) {
@@ -98,9 +109,8 @@ class Character extends MovableObject {
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
           //walk animation
           this.playAnimation(this.IMAGES_WALKING);
-        }
-        else{
-          this.loadImage("../img/2_character_pepe/1_idle/idle/I-1.png");        
+        } else {
+          this.loadImage("../img/2_character_pepe/1_idle/idle/I-1.png");
         }
       }
     }, 125);
@@ -109,31 +119,30 @@ class Character extends MovableObject {
   changeCameraPosition() {
     this.world.camera_x = -this.x + 100;
     this.world.healthBar.x = this.x - 60;
-    this.world.salsaBar.x = this.x -60;
+    this.world.salsaBar.x = this.x - 60;
   }
 
-  collectBottle(){
+  collectBottle() {
     this.bottleAmount += 10;
-  };
+  }
 
-  reduceBottles(){
-    if (this.bottleAmount>0) {
+  reduceBottles() {
+    if (this.bottleAmount > 0) {
       this.bottleAmount -= 10;
-    }
-    else{
+    } else {
       this.bottleAmount = 0;
     }
   }
 
-  checkJumpState(){
+  checkJumpState() {
     setInterval(() => {
       if (this.y >= 180) {
-      this.isJumping = false;        
-      }
-      else{
+        this.isJumping = false;
+      } else {
         this.isJumping = true;
       }
     }, 100);
   }
 
+  
 }

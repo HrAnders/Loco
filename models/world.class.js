@@ -33,22 +33,50 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrow();
-      this.getCharacterPosition();
+      this.checkCharacterBossDist();
     }, 50);
   }
 
   getCharacterPosition() {
     let charXPos = this.character.x;
-    this.checkCharacterBossDist(charXPos);
+    return charXPos;
   }
 
-  checkCharacterBossDist(characterXPos) {
-    this.level.enemies.forEach((enemy) => {
-      if (enemy instanceof Endboss && characterXPos > 200) {
-        enemy.playWalkAnimation();
+  getBossPosition(){
+    let bossXPos = 0;
+    this.level.enemies.forEach(enemy => {
+      if (enemy instanceof Endboss) {
+        bossXPos = enemy.x;
+        return bossXPos;
       }
-    }
-  )}
+      
+    });
+    return bossXPos;
+  }
+
+  getCharacterToBossDist() {
+    let charXPos = this.getCharacterPosition();
+    let bossXPos = this.getBossPosition();
+    let distance = bossXPos - charXPos;
+    return Math.abs(distance); // Use the absolute value of the distance
+  }
+  
+
+  checkCharacterBossDist() {
+    let characterToBossDist = this.getCharacterToBossDist();
+    //console.log('Distance to boss:', characterToBossDist); // Check the distance value
+    this.level.enemies.forEach((enemy) => {
+      if (enemy instanceof Endboss && !enemy.isDead) {
+        if (characterToBossDist < 199) {
+          console.log('Boss is Aggro!');
+          enemy.isAggro = true;
+        }
+      }
+    });
+  }
+  
+  
+  
 
   checkCollisions() {
     this.checkEnemyCollision();
@@ -56,6 +84,7 @@ class World {
     this.checkCollectibleCollision();
 
     this.checkBottleCollision();
+
   }
 
   checkEnemyCollision() {
@@ -66,13 +95,19 @@ class World {
         enemy instanceof Chicken
       ) {
         enemy.playDeathAnimation();
-      } else if (
+      } 
+      else if(this.character.isColliding(enemy) && enemy instanceof Endboss && !enemy.isDead){
+        this.character.energy = 0;
+        this.character.hit();
+      }
+      else if (
         !this.character.isJumping &&
         this.character.isColliding(enemy) &&
         !enemy.isDead
       ) {
         this.character.hit();
       }
+      
     });
   }
 
@@ -92,12 +127,11 @@ class World {
   checkBottleCollision() {
     this.level.enemies.forEach((enemy, enemyIndex) => {
       this.throwableObjects.forEach((throwable, throwableIndex) => {
-        if (enemy.isColliding(throwable) && enemy instanceof Endboss) {
+        if (enemy.isColliding(throwable) && enemy instanceof Endboss && !enemy.isDead) {
           throwable.playSplashAnimation();
           if (!throwable.causesDamage && !enemy.isDead) {
             enemy.reduceHealth();
             throwable.causesDamage = true;
-            enemy.playHurtAnimation();
             if (enemy.health < 10) {
               enemy.playDeathAnimation();
             }
@@ -107,11 +141,13 @@ class World {
     });
   }
 
+
   checkThrow() {
     if (
       this.keyboard.CTRL &&
       !this.isThrowing &&
-      this.character.bottleAmount > 0
+      this.character.bottleAmount > 0 &&
+      !this.character.isDead()
     ) {
       this.isThrowing = true;
       if (!this.character.facesOtherDirection) {
