@@ -33,17 +33,62 @@
   </head>
 
   <body onload="init()">
-
-    <img class="background-image" src="img/5_background/first_half_background.png" alt="">
+    <img
+      class="background-image"
+      src="img/5_background/first_half_background.png"
+      alt=""
+    />
 
     <div class="content">
-    <div id="container">
-      <canvas id="canvas" width="720" height="480"></canvas>
-      <menu id="controls">
-        <img src="img/fullscreen-12-64.ico" alt="" onclick="goFullScreen()">
-      </menu>
+      <div id="container">
+        <canvas id="canvas" width="720" height="480"></canvas>
+        <menu id="controls">
+          <img
+            class="setting-buttons"
+            src="img/icons/fullscreen-12-64.ico"
+            alt=""
+            onclick="goFullScreen()"
+          />
+          <img class="setting-buttons" src="img/icons/mute-3-64.ico" alt="" onclick="mutePage()"/>
+          <img class="setting-buttons" src="img/icons/info-2-64.ico" alt="" />
+        </menu>
+        <div id="startImageDiv" class="d-none">
+          <img
+            id="startImage"
+            src="img/9_intro_outro_screens/start/startscreen_1.png"
+            width="720"
+            height="480"
+          />
+          <div></div>
+        </div>
+      </div>
+
+      <div class="btn-explanation">
+        <div class="control-btn-container">
+          <div class="control-btn d-none" id="btnLeft">
+            <img class="control-img" src="img/icons/left-64.ico" alt="" />
+          </div>
+          <div class="control-btn d-none" id="btnRight">
+            <img class="control-img" src="img/icons/right-64.ico" alt="" onmousedown="moveRightStart()" onmouseup="moveRightStop()" />
+          </div>
+        </div>
+
+        <div class="start-btn" id="startBtn" onclick="startNewGame()">Start</div>
+        <div class="start-btn d-none" id="restartBtn" onclick="restartGame()">Restart</div>
+
+        <div class="control-btn-container">
+          <div class="control-btn d-none" id="btnUp">
+            <img class="control-img" src="img/icons/up-64.ico" alt="" onmousedown="jumpStart()" onmouseup="jumpStop()"/>
+          </div>
+          <div class="control-btn d-none" id="btnThrow" onclick="throwBottle();">
+            <img
+              class="control-img"
+              src="img/icons/beer-bottle-64.ico"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-    
   </body>
 </html>

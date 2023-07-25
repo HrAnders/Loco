@@ -2,13 +2,16 @@ class World {
   character = new Character();
   healthBar = new Healthbar();
   salsaBar = new SalsaBar();
+  bossBar = new BossBar();
   throwableObjects = [];
   level = level1;
+  endboss;
   ctx;
   canvas;
   keyboard;
   camera_x = 0;
   backgroundMusic = new Audio("audio/background_music.mp3");
+  isMuted = false;
 
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
@@ -17,6 +20,7 @@ class World {
     this.draw();
     this.setWorld();
     this.updateWorldData();
+    this.backgroundMusic.volume = 0.2;
     this.backgroundMusic.play();
     this.backgroundMusic.loop = true;
   }
@@ -26,14 +30,26 @@ class World {
     this.character.world = this;
     this.healthBar.world = this;
     this.salsaBar.world = this;
+    this.bossBar.world = this;
     this.level.world = this;
+    this.getEndbossInstance();
+  }
+
+  getEndbossInstance() {
+    this.level.enemies.forEach((enemy) => {
+      if (enemy instanceof Endboss) {
+        this.endboss = enemy;
+        this.endboss.world = this;
+      }
+    });
   }
 
   updateWorldData() {
-    setInterval(() => {
+    this.updateInterval = setInterval(() => {
       this.checkCollisions();
       this.checkThrow();
       this.checkCharacterBossDist();
+      this.endboss.changeBarPosition();
     }, 50);
   }
 
@@ -42,15 +58,9 @@ class World {
     return charXPos;
   }
 
-  getBossPosition(){
+  getBossPosition() {
     let bossXPos = 0;
-    this.level.enemies.forEach(enemy => {
-      if (enemy instanceof Endboss) {
-        bossXPos = enemy.x;
-        return bossXPos;
-      }
-      
-    });
+    bossXPos = this.endboss.x;
     return bossXPos;
   }
 
@@ -60,23 +70,18 @@ class World {
     let distance = bossXPos - charXPos;
     return Math.abs(distance); // Use the absolute value of the distance
   }
-  
 
   checkCharacterBossDist() {
     let characterToBossDist = this.getCharacterToBossDist();
     //console.log('Distance to boss:', characterToBossDist); // Check the distance value
-    this.level.enemies.forEach((enemy) => {
-      if (enemy instanceof Endboss && !enemy.isDead) {
-        if (characterToBossDist < 199) {
-          console.log('Boss is Aggro!');
-          enemy.isAggro = true;
-        }
+
+    if (!this.endboss.isDead) {
+      if (characterToBossDist < 199) {
+        console.log("Boss is Aggro!");
+        this.endboss.isAggro = true;
       }
-    });
+    }
   }
-  
-  
-  
 
   checkCollisions() {
     this.checkEnemyCollision();
@@ -84,7 +89,6 @@ class World {
     this.checkCollectibleCollision();
 
     this.checkBottleCollision();
-
   }
 
   checkEnemyCollision() {
@@ -95,19 +99,19 @@ class World {
         enemy instanceof Chicken
       ) {
         enemy.playDeathAnimation();
-      } 
-      else if(this.character.isColliding(enemy) && enemy instanceof Endboss && !enemy.isDead){
+      } else if (
+        this.character.isColliding(this.endboss) &&
+        !this.endboss.isDead
+      ) {
         this.character.energy = 0;
         this.character.hit();
-      }
-      else if (
+      } else if (
         !this.character.isJumping &&
         this.character.isColliding(enemy) &&
         !enemy.isDead
       ) {
         this.character.hit();
       }
-      
     });
   }
 
@@ -127,12 +131,16 @@ class World {
   checkBottleCollision() {
     this.level.enemies.forEach((enemy, enemyIndex) => {
       this.throwableObjects.forEach((throwable, throwableIndex) => {
-        if (enemy.isColliding(throwable) && enemy instanceof Endboss && !enemy.isDead) {
+        if (
+          enemy.isColliding(throwable) &&
+          enemy instanceof Endboss &&
+          !enemy.isDead
+        ) {
           throwable.playSplashAnimation();
           if (!throwable.causesDamage && !enemy.isDead) {
             enemy.reduceHealth();
             throwable.causesDamage = true;
-            if (enemy.health < 10) {
+            if (enemy.energy < 10) {
               enemy.playDeathAnimation();
             }
           }
@@ -140,7 +148,6 @@ class World {
       });
     });
   }
-
 
   checkThrow() {
     if (
@@ -150,27 +157,48 @@ class World {
       !this.character.isDead()
     ) {
       this.isThrowing = true;
-      if (!this.character.facesOtherDirection) {
-        let bottle = new ThrowableObject(
-          this.character.x + 50,
-          this.character.y + 100,
-          this.character.facesOtherDirection
-        );
-        this.throwableObjects.push(bottle);
-      } else {
-        let bottle = new ThrowableObject(
-          this.character.x + 10,
-          this.character.y + 100,
-          this.character.facesOtherDirection
-        );
-        this.throwableObjects.push(bottle);
-      }
-
+      this.getNewBottleObject();
       this.character.reduceBottles();
 
       setTimeout(() => {
         this.isThrowing = false;
       }, 1000);
+    }
+  }
+
+  checkBtnThrow(){
+    if (
+      !this.isThrowing &&
+      this.character.bottleAmount > 0 &&
+      !this.character.isDead()
+    ) {
+      this.isThrowing = true;
+      this.getNewBottleObject();
+      this.character.reduceBottles();
+
+      setTimeout(() => {
+        this.isThrowing = false;
+      }, 1000);
+    }
+  }
+
+  getNewBottleObject(){
+    if (!this.character.facesOtherDirection) {
+      let bottle = new ThrowableObject(
+        this.character.x + 50,
+        this.character.y + 100,
+        this.character.facesOtherDirection,
+        this.isMuted
+      );
+      this.throwableObjects.push(bottle);
+    } else {
+      let bottle = new ThrowableObject(
+        this.character.x + 10,
+        this.character.y + 100,
+        this.character.facesOtherDirection,
+        this.isMuted
+      );
+      this.throwableObjects.push(bottle);
     }
   }
 
@@ -182,6 +210,7 @@ class World {
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addUIElement(this.healthBar);
     this.addUIElement(this.salsaBar);
+    this.addUIElement(this.bossBar);
 
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
@@ -194,9 +223,11 @@ class World {
 
     //draw() wird immer wieder aufgerufen
     let self = this;
-    requestAnimationFrame(function () {
-      self.draw();
-    });
+    
+      requestAnimationFrame(function () {
+        self.draw();
+      });
+    
   }
 
   addObjectsToMap(objects) {
@@ -224,4 +255,21 @@ class World {
   addUIElement(elem) {
     elem.draw(this.ctx);
   }
+
+  cleanup() {
+    // Stop the updateWorldData interval
+    clearInterval(this.updateInterval);
+
+    // Clear any remaining throwableObjects
+    this.throwableObjects = [];
+
+    // Stop the background music and reset it to the beginning
+    this.backgroundMusic.pause();
+    this.backgroundMusic.currentTime = 0;
+
+    // Remove any event listeners added during the game
+    window.removeEventListener("keydown", this.keydownHandler);
+    window.removeEventListener("keyup", this.keyupHandler);
+  }
+
 }

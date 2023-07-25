@@ -1,6 +1,5 @@
-class BossHP extends StatusBar{
-health = 100;
-y = 100;
+class BossBar extends StatusBar{
+
 
   HEALTHBAR_IMAGES = [
     "img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png",
@@ -14,30 +13,30 @@ y = 100;
   constructor() {
     super().loadImage(this.HEALTHBAR_IMAGES[5]);
     this.loadImages(this.HEALTHBAR_IMAGES);
-    //this.animateHealthBar();
+    this.animateHealthBar();
   }
 
  
 
-  /*animateHealthBar() {
+  animateHealthBar() {
     setInterval(() => {
-      if (this.world.character.energy < 100 && this.world.character.energy >= 80) {
+      if (this.world.endboss.energy < 100 && this.world.endboss.energy >= 80) {
         this.img = this.imageCache[this.HEALTHBAR_IMAGES[4]];
       }
-      else if (this.world.character.energy < 80 && this.world.character.energy >= 60) {
+      else if (this.world.endboss.energy < 80 && this.world.endboss.energy >= 60) {
         this.img = this.imageCache[this.HEALTHBAR_IMAGES[3]];      
       }
-      else if (this.world.character.energy < 60 && this.world.character.energy >= 40) {
+      else if (this.world.endboss.energy < 60 && this.world.endboss.energy >= 40) {
         this.img = this.imageCache[this.HEALTHBAR_IMAGES[2]];      
       }
-      else if (this.world.character.energy < 40 && this.world.character.energy >= 20) {
+      else if (this.world.endboss.energy < 40 && this.world.endboss.energy >= 20) {
         this.img = this.imageCache[this.HEALTHBAR_IMAGES[1]];      
       }
-      else if (this.world.character.energy < 20) {
+      else if (this.world.endboss.energy < 20) {
         this.img = this.imageCache[this.HEALTHBAR_IMAGES[0]];      
       }
     }, 200);
     
     
-  }*/
+  }
 }

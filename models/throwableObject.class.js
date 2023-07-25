@@ -17,11 +17,12 @@ class ThrowableObject extends MovableObject {
 
   isCollided = false;
   causesDamage = false;
+  isMuted;
   currentImage = 0;
   breakingSound = new Audio("audio/breakingGlass.mp3");
   startTime = 0;
 
-  constructor(x, y, characterFacesOtherDirection) {
+  constructor(x, y, characterFacesOtherDirection, isMuted) {
     super().loadImage("img/6_salsa_bottle/salsa_bottle.png");
     this.loadImages(this.BOTTLE_ROTATION_IMAGES);
     this.loadImages(this.BOTTLE_SPLASH_IMAGES);
@@ -29,6 +30,7 @@ class ThrowableObject extends MovableObject {
     this.y = y;
     this.height = 80;
     this.width = 60;
+    this.isMuted = isMuted;
     this.throw(characterFacesOtherDirection);
     this.animate(this.BOTTLE_ROTATION_IMAGES);
   }
@@ -62,12 +64,12 @@ class ThrowableObject extends MovableObject {
   }
 
   playSplashAnimation() {
-    this.breakingSound.play();
+    if (!this.isMuted) {
+      this.breakingSound.play();
+    }
     this.isCollided = true;
     setInterval(() => {
       this.playAnimation(this.BOTTLE_SPLASH_IMAGES);
     }, 200);
   }
-
-
 }

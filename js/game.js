@@ -5,10 +5,52 @@ let isFullScreen = false;
 
 function init() {
   canvas = document.getElementById("canvas");
-  world = new World(canvas, keyboard);
+  showStartScreen();
+}
 
-  console.log("My character is ", world.character);
-  console.log("Enemies are ", world.level.enemies);
+function startNewGame() {
+  world = new World(canvas, keyboard);
+  document.getElementById("startBtn").classList.add("d-none");
+  showControls();
+  startButtonPress();
+  stopButtonPress();
+}
+
+function restartGame() {
+  window.location.reload();
+}
+
+function showControls() {
+  document.getElementById("btnLeft").classList.remove("d-none");
+  document.getElementById("btnRight").classList.remove("d-none");
+  document.getElementById("btnUp").classList.remove("d-none");
+  document.getElementById("btnThrow").classList.remove("d-none");
+  document.getElementById("restartBtn").classList.remove("d-none");
+}
+
+function showStartScreen() {
+  let ctx = canvas.getContext("2d");
+  let startImageDiv = document.getElementById("startImageDiv");
+  let startImage = document.getElementById("startImage");
+
+  // Show the hidden div temporarily to access the image
+  startImageDiv.style.display = "block";
+
+  // Get the width and height of the image
+  let imageWidth = startImage.width;
+  let imageHeight = startImage.height;
+
+  // Calculate the position to center the image on the canvas
+  let canvasWidth = canvas.width;
+  let canvasHeight = canvas.height;
+  let imageX = (canvasWidth - imageWidth) / 2;
+  let imageY = (canvasHeight - imageHeight) / 2;
+
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.drawImage(startImage, imageX, imageY, imageWidth, imageHeight);
+
+  // Hide the div again after drawing the image
+  startImageDiv.style.display = "none";
 }
 
 function goFullScreen() {
@@ -22,18 +64,55 @@ function goFullScreen() {
   isFullScreen = true;
 }
 
-
-function goMinScreen(){
+function goMinScreen() {
   if (document.exitFullscreen) {
     document.exitFullscreen();
-  } else if (document.webkitExitFullscreen) { /* Safari */
+  } else if (document.webkitExitFullscreen) {
+    /* Safari */
     document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) { /* IE11 */
+  } else if (document.msExitFullscreen) {
+    /* IE11 */
     document.msExitFullscreen();
   }
   isFullScreen = false;
 }
 
+function mutePage() {
+  if (!world.isMuted) {
+    world.backgroundMusic.muted = true;
+    muteCharacter();
+    muteEnemies();
+    world.isMuted = true;
+  }
+  else{
+    world.backgroundMusic.muted = false;
+    unmuteCharacter();
+    unmuteEnemies();
+    world.isMuted = false;
+  }
+}
+
+function muteCharacter() {
+  world.character.walking_sound.muted = true;
+  world.character.hurtSound.muted = true;
+}
+
+function unmuteCharacter(){
+  world.character.walking_sound.muted = true;
+  world.character.hurtSound.muted = true;
+}
+
+function muteEnemies() {
+  world.level.enemies.forEach((enemy) => {
+    enemy.deathSound.muted = true;
+  });
+}
+
+function unmuteEnemies(){
+  world.level.enemies.forEach((enemy) => {
+    enemy.deathSound.muted = false;
+  });
+}
 
 window.addEventListener("keydown", (e) => {
   switch (e.code) {
@@ -84,3 +163,48 @@ window.addEventListener("keyup", (e) => {
       break;
   }
 });
+
+
+function startButtonPress() {
+  document.getElementById("btnLeft").addEventListener("touchstart", (ev) => {
+      keyboard.LEFT = true;
+      ev.preventDefault();
+  })
+
+  document.getElementById("btnRight").addEventListener("touchstart", (ev) => {
+      keyboard.RIGHT = true;
+      ev.preventDefault();
+  })
+
+  document.getElementById("btnUp").addEventListener("touchstart", (ev) => {
+      keyboard.SPACE = true;
+      ev.preventDefault();
+  })
+
+  document.getElementById("btnThrow").addEventListener("touchstart", (ev) => {
+      keyboard.CTRL = true;
+      ev.preventDefault();
+  })
+}
+
+function stopButtonPress() {
+  document.getElementById("btnLeft").addEventListener("touchend", (ev) => {
+      keyboard.LEFT = false;
+      ev.preventDefault();
+  })
+
+  document.getElementById("btnRight").addEventListener("touchend", (ev) => {
+      keyboard.RIGHT = false;
+      ev.preventDefault();
+  })
+
+  document.getElementById("btnUp").addEventListener("touchend", (ev) => {
+      keyboard.SPACE = false;
+      ev.preventDefault();
+  })
+
+  document.getElementById("btnThrow").addEventListener("touchend", (ev) => {
+      keyboard.CTRL = false;
+      ev.preventDefault();
+  })
+}

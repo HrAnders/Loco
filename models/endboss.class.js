@@ -15,7 +15,7 @@ class Endboss extends MovableObject {
   y = 50;
   speed = 2;
   animationInterval;
-  bar = new BossHP();
+  deathSound = new Audio("audio/endboss_death.mp3");
 
   IMAGES_IDLE = [
     "img/4_enemie_boss_chicken/2_alert/G5.png",
@@ -105,16 +105,22 @@ class Endboss extends MovableObject {
   playDeathAnimation() {
     clearInterval(this.animationInterval);
     this.loadImage(this.IMAGES_DEAD[2]);
+    this.deathSound.play();
   }
 
   reduceHealth() {
-    if (this.health > 0) {
-      this.health -= 10;
+    if (this.energy > 0) {
+      this.energy -= 25;
       this.isHurt = true;
-      if (this.health <= 0) {
+      if (this.energy <= 0) {
         this.isDead = true;
-        this.health = 0;
+        this.energy = 0;
       }
     }
+  }
+
+  changeBarPosition() {
+    this.world.bossBar.x = this.x;
+    this.world.bossBar.y = this.y - 20;
   }
 }
