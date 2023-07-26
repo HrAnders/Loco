@@ -2,6 +2,7 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let isFullScreen = false;
+let canvasContainer = document.getElementById("container");
 
 function init() {
   canvas = document.getElementById("canvas");
@@ -53,13 +54,33 @@ function showStartScreen() {
   startImageDiv.style.display = "none";
 }
 
+function showInfo(){
+  let infoDiv = document.getElementById("infoDiv");
+  infoDiv.classList.remove('d-none');
+}
+
+function hideInfo(){
+  let infoDiv = document.getElementById("infoDiv");
+  infoDiv.classList.add('d-none');
+}
+
+function toggleFullScreen(){
+  if(!isFullScreen){
+    goFullScreen();
+  }
+  else{
+    goMinScreen();
+  }
+}
+
 function goFullScreen() {
-  if (canvas.requestFullscreen) {
-    canvas.requestFullscreen();
-  } else if (canvas.webkitRequestFullscreen) {
-    canvas.webkitRequestFullscreen();
-  } else if (canvas.mozRequestFullScreen) {
-    canvas.mozRequestFullScreen();
+  let container = document.getElementById("container");
+  if (container.requestFullscreen) {
+    container.requestFullscreen();
+  } else if (container.webkitRequestFullscreen) {
+    container.webkitRequestFullscreen();
+  } else if (container.mozRequestFullScreen) {
+    container.mozRequestFullScreen();
   }
   isFullScreen = true;
 }

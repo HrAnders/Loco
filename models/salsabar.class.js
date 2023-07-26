@@ -1,6 +1,6 @@
 class SalsaBar extends StatusBar {
     health = 0;
-    y = 40;
+    y = 30;
   
     SALSABAR_IMAGES = [
       "img/7_statusbars/1_statusbar/3_statusbar_bottle/green/0.png",

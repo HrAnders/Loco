@@ -3,6 +3,7 @@ class World {
   healthBar = new Healthbar();
   salsaBar = new SalsaBar();
   bossBar = new BossBar();
+  coinBar = new CoinBar();
   throwableObjects = [];
   level = level1;
   endboss;
@@ -31,8 +32,10 @@ class World {
     this.healthBar.world = this;
     this.salsaBar.world = this;
     this.bossBar.world = this;
+    this.coinBar.world = this;
     this.level.world = this;
     this.getEndbossInstance();
+    this.getSpawnedCoins();
   }
 
   getEndbossInstance() {
@@ -50,7 +53,7 @@ class World {
       this.checkThrow();
       this.checkCharacterBossDist();
       this.endboss.changeBarPosition();
-    }, 50);
+    }, 10);
   }
 
   getCharacterPosition() {
@@ -68,12 +71,11 @@ class World {
     let charXPos = this.getCharacterPosition();
     let bossXPos = this.getBossPosition();
     let distance = bossXPos - charXPos;
-    return Math.abs(distance); // Use the absolute value of the distance
+    return Math.abs(distance); 
   }
 
   checkCharacterBossDist() {
     let characterToBossDist = this.getCharacterToBossDist();
-    //console.log('Distance to boss:', characterToBossDist); // Check the distance value
 
     if (!this.endboss.isDead) {
       if (characterToBossDist < 199) {
@@ -98,6 +100,7 @@ class World {
         this.character.isTopColliding(enemy) &&
         enemy instanceof Chicken
       ) {
+        console.log("top collision detected");
         enemy.playDeathAnimation();
       } else if (
         this.character.isColliding(this.endboss) &&
@@ -118,12 +121,26 @@ class World {
   checkCollectibleCollision() {
     this.level.collectibles.forEach((collectible, index) => {
       if (
-        this.character.isColliding(collectible) &&
-        collectible instanceof Bottle
+        this.character.isColliding(collectible)
       ) {
-        this.character.collectBottle();
+        collectible.playCollectSound();
+
+        if (collectible instanceof Bottle) {
+          this.character.collectBottle();
+        }
+        else if(collectible instanceof Coin){
+          this.character.collectCoin();
+        }
         this.level.collectibles.splice(index, 1);
         collectible = null;
+      }
+    });
+  }
+
+  getSpawnedCoins(){
+    this.level.collectibles.forEach(collectible => {
+      if (collectible instanceof Coin) {
+        this.character.coinsSpawned +=1;
       }
     });
   }
@@ -138,6 +155,7 @@ class World {
         ) {
           throwable.playSplashAnimation();
           if (!throwable.causesDamage && !enemy.isDead) {
+            enemy.isAggro = true;
             enemy.reduceHealth();
             throwable.causesDamage = true;
             if (enemy.energy < 10) {
@@ -211,6 +229,7 @@ class World {
     this.addUIElement(this.healthBar);
     this.addUIElement(this.salsaBar);
     this.addUIElement(this.bossBar);
+    this.addUIElement(this.coinBar);
 
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
@@ -246,6 +265,7 @@ class World {
 
     //movObj.drawCollisionBoxes(this.ctx);
     //movObj.drawOffsetBoxes(this.ctx);
+    //movObj.drawJumpCollisionBox(this.ctx);
 
     if (movObj.facesOtherDirection) {
       movObj.flipImageBack(this.ctx);
@@ -255,21 +275,4 @@ class World {
   addUIElement(elem) {
     elem.draw(this.ctx);
   }
-
-  cleanup() {
-    // Stop the updateWorldData interval
-    clearInterval(this.updateInterval);
-
-    // Clear any remaining throwableObjects
-    this.throwableObjects = [];
-
-    // Stop the background music and reset it to the beginning
-    this.backgroundMusic.pause();
-    this.backgroundMusic.currentTime = 0;
-
-    // Remove any event listeners added during the game
-    window.removeEventListener("keydown", this.keydownHandler);
-    window.removeEventListener("keyup", this.keyupHandler);
-  }
-
 }

@@ -12,6 +12,12 @@ class DrawableObject {
     right: 0,
     bottom: 0,
   };
+  jumpCollisionBox = {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  };
 
   loadImage(path) {
     this.img = new Image(); // entspricht dem img-tag in html --> this.img = document.getElementById('image) --> <img id="image">
@@ -56,6 +62,16 @@ class DrawableObject {
     }
   }
 
+  drawJumpCollisionBox(ctx){
+    if (this instanceof Character) {
+      ctx.beginPath();
+      ctx.lineWidth = "5";
+      ctx.strokeStyle = "orange";
+      ctx.rect(this.x + this.jumpCollisionBox.left, this.y + this.jumpCollisionBox.top, this.width - this.jumpCollisionBox.right, this.height-this.jumpCollisionBox.bottom);
+      ctx.stroke();
+    }
+  }
+
   // Bsp.: character.isColliding(chicken)
   isColliding(obj) {
     return (
@@ -63,18 +79,19 @@ class DrawableObject {
       (this.x + this.offset.left) <= (obj.x + obj.width - obj.offset.right) && // L-R-Abfrage
       (this.y + this.offset.top + this.offset.bottom) >= obj.y + obj.offset.top &&  // T-B-Abfrage
       (this.y + this.offset.top) <= (obj.y + obj.height - obj.offset.bottom) // B-T-Abfrage
-    ); //&&
-    //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
+    );
   }
 
   isTopColliding(obj) {
-    return (
-      this.isJumping &&  // Überprüfe, ob der Character sich im Sprung befindet
-      this.y + this.offset.top <= obj.y + obj.height - obj.offset.bottom &&  // Überprüfe, ob der Character von oben auf das Chicken trifft
-      (this.y + this.offset.top + this.offset.bottom) >= obj.y + obj.offset.top &&  
-      (this.y + this.offset.top + this.offset.bottom) <= (obj.y + obj.offset.top + obj.jumpThreshold)
-    );
-  }
+  return (
+    this.isJumping &&  // Überprüfe, ob der Character sich im Sprung befindet
+    this.x + this.jumpCollisionBox.left >= obj.x + obj.offset.left && // Linke Seite der Sprung-Kollisionsbox
+    this.x + this.jumpCollisionBox.right <= obj.x + obj.width - obj.offset.right && // Rechte Seite der Sprung-Kollisionsbox
+    this.y + this.jumpCollisionBox.top >= obj.y + obj.offset.top  // Obere Seite der Sprung-Kollisionsbox
+    //this.y + this.jumpCollisionBox.bottom <= obj.y + obj.height - obj.offset.bottom // Untere Seite der Sprung-Kollisionsbox
+  );
+}
+
   
   
 

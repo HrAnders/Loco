@@ -2,7 +2,7 @@ class Endboss extends MovableObject {
   height = 400;
   width = 300;
   currentImage = 0;
-  health = 20;
+  energy = 100;
   isDead = false;
   isHurt = false;
   isAggro = false;
@@ -51,7 +51,7 @@ class Endboss extends MovableObject {
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
     this.loadImages(this.IMAGES_WALKING);
-    this.x = 700;
+    this.x = 2000;
     this.animate();
   }
 
@@ -61,21 +61,18 @@ class Endboss extends MovableObject {
     this.animationInterval = setInterval(() => {
       if (!this.isDead && !this.isAggro && !this.isHurt) {
         this.playIdleAnimation();
-      } else if(!this.isDead && this.isHurt) {
+      } else if (!this.isDead && this.isHurt) {
         this.playHurtAnimation();
-      }
-      
-      else if (!this.isDead && this.isAggro && !this.isHurt) {
+      } else if (!this.isDead && this.isAggro && !this.isHurt) {
         this.playWalkAnimation();
       }
-      
     }, 200);
 
     setInterval(() => {
       if (!this.isDead && this.isAggro && !this.isHurt) {
         this.moveLeft();
       }
-    }, 1000/60);
+    }, 1000 / 60);
   }
 
   playIdleAnimation() {
@@ -83,7 +80,7 @@ class Endboss extends MovableObject {
   }
 
   playWalkAnimation() {
-      this.playAnimation(this.IMAGES_WALKING);
+    this.playAnimation(this.IMAGES_WALKING);
   }
 
   playHurtAnimation() {
@@ -91,21 +88,25 @@ class Endboss extends MovableObject {
 
     this.animationInterval = setInterval(() => {
       this.playAnimation(this.IMAGES_HURT);
-    },200);
+    }, 200);
 
     setTimeout(() => {
       clearInterval(this.animationInterval);
       this.isHurt = false;
-    this.animate();
-    }, 1500);
-
-    
+      this.animate();
+    }, 500);
   }
 
   playDeathAnimation() {
-    clearInterval(this.animationInterval);
-    this.loadImage(this.IMAGES_DEAD[2]);
     this.deathSound.play();
+    clearInterval(this.animationInterval);
+    this.animationInterval = setInterval(() => {
+      this.playAnimation(this.IMAGES_DEAD);
+    }, 200);
+    setTimeout(() => {
+      this.loadImage(this.IMAGES_DEAD[2]);
+      clearInterval(this.animationInterval);
+    }, 1200);
   }
 
   reduceHealth() {
@@ -115,12 +116,22 @@ class Endboss extends MovableObject {
       if (this.energy <= 0) {
         this.isDead = true;
         this.energy = 0;
+        setTimeout(() => {
+          this.showEndScreen();
+        }, 1500);
       }
     }
   }
 
   changeBarPosition() {
     this.world.bossBar.x = this.x;
-    this.world.bossBar.y = this.y - 20;
+    this.world.bossBar.y = this.y;
+  }
+
+  showEndScreen(){
+    let endScreen = document.getElementById('endScreenDiv');
+    endScreen.classList.remove('d-none');
+    this.world.character.isGameOver = true;
+
   }
 }

@@ -14,15 +14,15 @@ body {
 
 canvas {
   background-color: black;
+  display: block;
+  border-radius: 10px;
   height: 100%;
   width: 100%;
-  border-radius: 10px;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-
   width: 100vw;
   height: 100vh;
   justify-content: center;
@@ -58,7 +58,7 @@ canvas {
 }
 
 .d-none {
-  display: none !important; 
+  display: none !important;
 }
 
 .control-buttons {
@@ -117,4 +117,155 @@ canvas {
   border: 3px solid black;
   font-size: 2rem;
   font-family: Ultra;
+}
+
+.restart-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 60px;
+  width: 180px;
+  border-radius: 15px;
+  background-color: rgb(255, 183, 0);
+  border: 3px solid black;
+  font-size: 2rem;
+  font-family: Ultra;
+  position: absolute;
+  top: 20px;
+}
+
+#infoDiv {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    0deg,
+    rgba(128, 92, 46, 0.952) 0%,
+    rgba(255, 153, 0, 0.929) 100%
+  );
+  z-index: 10;
+  border-radius: 10px;
+  font-family: Ultra;
+}
+
+#rotationDiv{
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    0deg,
+    rgba(128, 92, 46, 0.952) 0%,
+    rgba(255, 153, 0, 0.929) 100%
+  );
+  z-index: 10;
+  border-radius: 10px;
+  font-family: Ultra;
+  font-size: 2rem;
+}
+
+#rotationDiv span{
+  text-align: center;
+}
+
+#endScreenDiv {
+  display: flex;
+  position: absolute;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+#endScreenDiv img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.flex-100 {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.centered {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.close-btn {
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+}
+
+.close-btn-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+table tr td:nth-child(2) {
+  padding-left: 10px;
+}
+
+table {
+  margin-top: 20px;
+}
+
+.start-btn-container {
+  display: flex;
+  top: 20px;
+  position: absolute;
+}
+
+
+
+@media only screen and (max-width: 1000px) {
+  #container {
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  #rotationDiv{
+    display: flex;
+  }
+}
+
+@media only screen and (max-height: 480px) {
+  #container {
+    max-height: 80%;
+  }
+
+  .btn-explanation {
+    margin-top: 5px;
+  }
+  .control-btn {
+    height: 50px;
+    width: 50px;
+  }
+
+  .start-btn{
+    height: 35px;
+    width: 140px;
+    font-size: 1.5rem;
+  }
+
+  .restart-btn{
+    height: 35px;
+    width: 140px;
+    font-size: 1.5rem;
+  }
+
+  #fullScreenBtn{
+    display: none;
+  }
 }

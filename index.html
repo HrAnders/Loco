@@ -18,11 +18,13 @@
     <script src="models/healthbar.class.js"></script>
     <script src="models/salsabar.class.js"></script>
     <script src="models/bossBar.class.js"></script>
+    <script src="models/coinbar.class.js"></script>
     <script src="models/chicken.class.js"></script>
     <script src="models/endboss.class.js"></script>
     <script src="models/cloud.class.js"></script>
     <script src="models/collectibleObject.class.js"></script>
     <script src="models/bottle.class.js"></script>
+    <script src="models/coins.class.js"></script>
     <script src="models/world.class.js"></script>
     <script src="models/background-object.class.js"></script>
     <script src="models/keyboard.class.js"></script>
@@ -47,11 +49,32 @@
             class="setting-buttons"
             src="img/icons/fullscreen-12-64.ico"
             alt=""
-            onclick="goFullScreen()"
+            onclick="toggleFullScreen()"
+            id="fullScreenBtn"
           />
-          <img class="setting-buttons" src="img/icons/mute-3-64.ico" alt="" onclick="mutePage()"/>
-          <img class="setting-buttons" src="img/icons/info-2-64.ico" alt="" />
+          <img
+            class="setting-buttons"
+            src="img/icons/mute-3-64.ico"
+            alt=""
+            onclick="mutePage()"
+          />
+          <img
+            class="setting-buttons"
+            src="img/icons/info-2-64.ico"
+            alt=""
+            onclick="showInfo()"
+          />
         </menu>
+
+        <div class="start-btn-container">
+          <div class="start-btn" id="startBtn" onclick="startNewGame()">
+            Start
+          </div>
+          <div class="start-btn d-none" id="restartBtn" onclick="restartGame()">
+            Restart
+          </div>
+        </div>
+
         <div id="startImageDiv" class="d-none">
           <img
             id="startImage"
@@ -61,6 +84,65 @@
           />
           <div></div>
         </div>
+
+        <div id="infoDiv" class="d-none">
+          <div class="close-btn-container">
+            <img
+              class="close-btn"
+              src="img/icons/x-mark-64.ico"
+              alt=""
+              onclick="hideInfo()"
+            />
+          </div>
+          <div class="flex-100 centered flex-column">
+            <span>Help Pepe to defeat the angry chickens</span><br />
+            <span>Little chickens need a headjump</span><br />
+            <span
+              >The nasty endboss must be defeated with good old tabasco</span
+            >
+            <table>
+              <tr>
+                <td>Controls</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Walk</td>
+                <td>Arrow keys, A and D or buttons</td>
+              </tr>
+              <tr>
+                <td>Jump</td>
+                <td>Space or button</td>
+              </tr>
+              <tr>
+                <td>Throw tabasco</td>
+                <td>CTRL or button</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div id="rotationDiv">
+          <div class="flex-100 centered flex-column">
+            <span>Please rotate your device</span><br />
+          </div>
+        </div>
+
+        <div id="endScreenDiv" class="d-none">
+          <div class="flex-100 centered flex-column">
+            <img
+              src="img/9_intro_outro_screens/game_over/game over!.png"
+              alt=""
+            />
+            <div class="restart-btn" onclick="restartGame()">
+              Restart
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div class="btn-explanation">
@@ -69,18 +151,31 @@
             <img class="control-img" src="img/icons/left-64.ico" alt="" />
           </div>
           <div class="control-btn d-none" id="btnRight">
-            <img class="control-img" src="img/icons/right-64.ico" alt="" onmousedown="moveRightStart()" onmouseup="moveRightStop()" />
+            <img
+              class="control-img"
+              src="img/icons/right-64.ico"
+              alt=""
+              onmousedown="moveRightStart()"
+              onmouseup="moveRightStop()"
+            />
           </div>
         </div>
 
-        <div class="start-btn" id="startBtn" onclick="startNewGame()">Start</div>
-        <div class="start-btn d-none" id="restartBtn" onclick="restartGame()">Restart</div>
-
         <div class="control-btn-container">
           <div class="control-btn d-none" id="btnUp">
-            <img class="control-img" src="img/icons/up-64.ico" alt="" onmousedown="jumpStart()" onmouseup="jumpStop()"/>
+            <img
+              class="control-img"
+              src="img/icons/up-64.ico"
+              alt=""
+              onmousedown="jumpStart()"
+              onmouseup="jumpStop()"
+            />
           </div>
-          <div class="control-btn d-none" id="btnThrow" onclick="throwBottle();">
+          <div
+            class="control-btn d-none"
+            id="btnThrow"
+            onclick="throwBottle();"
+          >
             <img
               class="control-img"
               src="img/icons/beer-bottle-64.ico"
