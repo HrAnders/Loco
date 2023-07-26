@@ -19,7 +19,9 @@ class SalsaBar extends StatusBar {
     }
   
    
-  
+    /**
+   * This function is used to render the bottlebar of the character
+   */
     animateSalsaBar() {
       setInterval(() => {
         if (this.world.character.bottleAmount < 100 && this.world.character.bottleAmount >= 80) {

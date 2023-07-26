@@ -18,6 +18,9 @@ class Coin extends CollectibleObject{
         this.animate();
     }
 
+    /**
+     * This function renders the coin animation
+     */
     animate(){
         setInterval(() => {
             this.playAnimation(this.IMAGES_COINS);

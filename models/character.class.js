@@ -98,40 +98,21 @@ class Character extends MovableObject {
     this.startIdleTimer();
   }
 
+  /**
+   * This function is used to animate the character according to its state
+   */
   animate() {
     this.walking_sound.pause();
 
     setInterval(() => {
       this.isMoving = false;
-      if (
-        this.world.keyboard.RIGHT &&
-        this.x < this.world.level.level_end_x &&
-        !this.isDead() &&
-        !this.isGameOver
-      ) {
-        this.moveRight();
-        this.facesOtherDirection = false;
-        this.walking_sound.play();
-        this.isMoving = true;
+      if (this.isAbleToMoveRight()) {
+        this.moveToRight();
       }
-
-      if (
-        this.world.keyboard.LEFT &&
-        this.x > 0 &&
-        !this.isDead() &&
-        !this.isGameOver
-      ) {
-        this.moveLeft();
-        this.facesOtherDirection = true;
-        this.walking_sound.play();
-        this.isMoving = true;
+      if (this.isAbleToMoveLeft()) {
+        this.moveToLeft();
       }
-
-      if (
-        this.world.keyboard.SPACE &&
-        !this.isAboveGround() &&
-        !this.isDead()
-      ) {
+      if (this.isAbleToJump()) {
         this.jump();
         this.isMoving = true;
       }
@@ -139,7 +120,7 @@ class Character extends MovableObject {
       if (!this.isMoving) {
         this.startIdleTimer();
       } else {
-        this.stopIdleTimer(); 
+        this.stopIdleTimer();
         this.longsleep = false;
       }
 
@@ -148,32 +129,101 @@ class Character extends MovableObject {
 
     let animationInterval = setInterval(() => {
       if (this.isDead()) {
-        clearInterval(animationInterval);
-        this.playAnimation(this.IMAGES_DEAD);
-        this.speed = 0;
-        this.world.endboss.showEndScreen();
-        clearInterval(animationInterval);
+        this.playDeathAnimation(animationInterval);
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
-      }else if (this.isAboveGround()) {
+      } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
-      } 
-      else {
-        if (this.world.keyboard.RIGHT && !this.isGameOver || this.world.keyboard.LEFT && !this.isGameOver) {
-          //walk animation
+      } else {
+        if (
+          (this.world.keyboard.RIGHT && !this.isGameOver) ||
+          (this.world.keyboard.LEFT && !this.isGameOver)
+        ) {
           this.playAnimation(this.IMAGES_WALKING);
-        } else if(this.isIdle){
+        } else if (this.isIdle) {
           this.playAnimation(this.IMAGES_IDLE);
-        }
-        else {
+        } else {
           this.loadImage("../img/2_character_pepe/1_idle/idle/I-1.png");
         }
       }
     }, 125);
   }
 
+  /**
+   * This function is used to render the death animation of the character
+   * 
+   * @param {animationInterval} animationInterval - The animation interval of the character
+   */
+  playDeathAnimation(animationInterval){
+    clearInterval(animationInterval);
+        this.playAnimation(this.IMAGES_DEAD);
+        this.speed = 0;
+        this.world.endboss.showEndScreen();
+        clearInterval(animationInterval);
+  }
+
+  /**
+   * This function checks if the character is able to move right
+   * 
+   * @returns {boolean} - true if the character is able to move right
+   */
+  isAbleToMoveRight() {
+    return (
+      this.world.keyboard.RIGHT &&
+      this.x < this.world.level.level_end_x &&
+      !this.isDead() &&
+      !this.isGameOver
+    );
+  }
+
+  /**
+   * This function is used to move the character to the right
+   */
+  moveToRight() {
+    this.moveRight();
+    this.facesOtherDirection = false;
+    this.walking_sound.play();
+    this.isMoving = true;
+  }
+
+  /**
+   * This function checks if the character is able to move left
+   * 
+   * @returns {boolean} - true if the character is able to move left
+   */
+  isAbleToMoveLeft() {
+    return (
+      this.world.keyboard.LEFT &&
+      this.x > 0 &&
+      !this.isDead() &&
+      !this.isGameOver
+    );
+  }
+
+  /**
+   * This function is used to move the character to the left
+   */
+  moveToLeft() {
+    this.moveLeft();
+    this.facesOtherDirection = true;
+    this.walking_sound.play();
+    this.isMoving = true;
+  }
+
+  /**
+   * This function checks if the character is able to jump
+   * 
+   * @returns {boolean} - true if the character is able to jump
+   */
+  isAbleToJump() {
+    return this.world.keyboard.SPACE && !this.isAboveGround() && !this.isDead();
+  }
+
+  /**
+   * This function changes the camera position in relation to the character
+   */
   changeCameraPosition() {
     this.world.camera_x = -this.x + 100;
     this.world.healthBar.x = this.x - 60;
@@ -181,14 +231,23 @@ class Character extends MovableObject {
     this.world.coinBar.x = this.x - 60;
   }
 
+  /**
+   * This function increases the amount of collected bottles
+   */
   collectBottle() {
     this.bottleAmount += 10;
   }
 
+  /**
+   * This function increases the amount of collected coins
+   */
   collectCoin() {
     this.coinAmount += 1 / this.coinsSpawned;
   }
 
+  /**
+   * This function decreases the amount of collected bottles and checks if it is 0
+   */
   reduceBottles() {
     if (this.bottleAmount > 0) {
       this.bottleAmount -= 10;
@@ -197,6 +256,9 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * This function sets the jumping state of the character
+   */
   checkJumpState() {
     setInterval(() => {
       if (this.y >= 180) {
@@ -207,26 +269,26 @@ class Character extends MovableObject {
     }, 100);
   }
 
+  /**
+   * This function starts the timer for the idle animation and sets isIdle to true after the idleTimeout
+   */
   startIdleTimer() {
     if (!this.isIdleTimeoutStarted) {
       this.idleTimeout = setTimeout(() => {
         this.isIdle = true;
       }, 1500);
       this.isIdleTimeoutStarted = true;
-      //console.log("Timeout wurde gestartet.");
-    } else {
-      //console.log("Timeout wurde bereits gestartet.");
-    }
+    } 
   }
 
+  /**
+   * This function stops the timer for the idle animation and sets isIdle to false
+   */
   stopIdleTimer() {
     if (this.idleTimeout) {
       clearTimeout(this.idleTimeout);
       this.idleTimeout = null;
       this.isIdleTimeoutStarted = false;
-      //console.log("Timeout wurde gestoppt.");
     }
   }
-
-
 }

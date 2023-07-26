@@ -4,11 +4,17 @@ let keyboard = new Keyboard();
 let isFullScreen = false;
 let canvasContainer = document.getElementById("container");
 
+/**
+ * This function initializes the start screen
+ */
 function init() {
   canvas = document.getElementById("canvas");
   showStartScreen();
 }
 
+/**
+ * This function starts a new game
+ */
 function startNewGame() {
   world = new World(canvas, keyboard);
   document.getElementById("startBtn").classList.add("d-none");
@@ -17,10 +23,16 @@ function startNewGame() {
   stopButtonPress();
 }
 
+/**
+ * This function restarts the game
+ */
 function restartGame() {
   window.location.reload();
 }
 
+/**
+ * This function shows the control buttons
+ */
 function showControls() {
   document.getElementById("btnLeft").classList.remove("d-none");
   document.getElementById("btnRight").classList.remove("d-none");
@@ -29,19 +41,28 @@ function showControls() {
   document.getElementById("restartBtn").classList.remove("d-none");
 }
 
+/**
+ * This function shows the start screen
+ */
 function showStartScreen() {
   let ctx = canvas.getContext("2d");
   let startImageDiv = document.getElementById("startImageDiv");
   let startImage = document.getElementById("startImage");
 
-  // Show the hidden div temporarily to access the image
   startImageDiv.style.display = "block";
 
-  // Get the width and height of the image
+  drawStartScreen(startImage, ctx);
+
+  startImageDiv.style.display = "none";
+}
+
+/**
+ * This function draws and aligns the start screen
+ */
+function drawStartScreen(startImage, ctx){
   let imageWidth = startImage.width;
   let imageHeight = startImage.height;
 
-  // Calculate the position to center the image on the canvas
   let canvasWidth = canvas.width;
   let canvasHeight = canvas.height;
   let imageX = (canvasWidth - imageWidth) / 2;
@@ -49,21 +70,27 @@ function showStartScreen() {
 
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   ctx.drawImage(startImage, imageX, imageY, imageWidth, imageHeight);
-
-  // Hide the div again after drawing the image
-  startImageDiv.style.display = "none";
 }
 
+/**
+ * This function shows the info screen
+ */
 function showInfo(){
   let infoDiv = document.getElementById("infoDiv");
   infoDiv.classList.remove('d-none');
 }
 
+/**
+ * This function hides the info screen
+ */
 function hideInfo(){
   let infoDiv = document.getElementById("infoDiv");
   infoDiv.classList.add('d-none');
 }
 
+/**
+ * This function toggles the fullscreen
+ */
 function toggleFullScreen(){
   if(!isFullScreen){
     goFullScreen();
@@ -73,6 +100,9 @@ function toggleFullScreen(){
   }
 }
 
+/**
+ * This function sets the canvas container to fullscreen
+ */
 function goFullScreen() {
   let container = document.getElementById("container");
   if (container.requestFullscreen) {
@@ -85,6 +115,9 @@ function goFullScreen() {
   isFullScreen = true;
 }
 
+/**
+ * This function resets the canvas container to small screen
+ */
 function goMinScreen() {
   if (document.exitFullscreen) {
     document.exitFullscreen();
@@ -98,6 +131,9 @@ function goMinScreen() {
   isFullScreen = false;
 }
 
+/**
+ * This function handles the muting of the game
+ */
 function mutePage() {
   if (!world.isMuted) {
     world.backgroundMusic.muted = true;
@@ -113,28 +149,43 @@ function mutePage() {
   }
 }
 
+/**
+ * This function mutes the character
+ */
 function muteCharacter() {
   world.character.walking_sound.muted = true;
   world.character.hurtSound.muted = true;
 }
 
+/**
+ * This function unmutes the character
+ */
 function unmuteCharacter(){
   world.character.walking_sound.muted = true;
   world.character.hurtSound.muted = true;
 }
 
+/**
+ * This function mutes the enemies
+ */
 function muteEnemies() {
   world.level.enemies.forEach((enemy) => {
     enemy.deathSound.muted = true;
   });
 }
 
+/**
+ * This function unmutes the enemies
+ */
 function unmuteEnemies(){
   world.level.enemies.forEach((enemy) => {
     enemy.deathSound.muted = false;
   });
 }
 
+/**
+ * This function handles the keys pressed by the player
+ */
 window.addEventListener("keydown", (e) => {
   switch (e.code) {
     case "KeyD":
@@ -160,6 +211,9 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
+/**
+ * This function handles the keys released by the player
+ */
 window.addEventListener("keyup", (e) => {
   switch (e.code) {
     case "KeyD":
@@ -185,7 +239,9 @@ window.addEventListener("keyup", (e) => {
   }
 });
 
-
+/**
+ * This function handles the touch events for mobile devices on press
+ */
 function startButtonPress() {
   document.getElementById("btnLeft").addEventListener("touchstart", (ev) => {
       keyboard.LEFT = true;
@@ -208,6 +264,9 @@ function startButtonPress() {
   })
 }
 
+/**
+ * This function handles the touch events for mobile devices on release
+ */
 function stopButtonPress() {
   document.getElementById("btnLeft").addEventListener("touchend", (ev) => {
       keyboard.LEFT = false;

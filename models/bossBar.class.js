@@ -17,7 +17,9 @@ class BossBar extends StatusBar{
   }
 
  
-
+  /**
+   * This function is used to render the healthbar of the endboss
+   */
   animateHealthBar() {
     setInterval(() => {
       if (this.world.endboss.energy < 100 && this.world.endboss.energy >= 80) {

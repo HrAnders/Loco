@@ -29,17 +29,26 @@ class Chicken extends MovableObject {
     this.animate();
   }
 
+  /**
+   * This function renders the walking animation of the chickens
+   */
   animate() {
     this.animationInterval = setInterval(() => {
       this.playWalkingAnimation();
     }, 100);
   }
 
+  /**
+   * This function moves the chicken to the left and delivers the animation images
+   */
   playWalkingAnimation() {
     this.moveLeft();
     this.playAnimation(this.IMAGES_WALKING);
   }
 
+  /**
+   * This function renders the death animation of the chicken
+   */
   playDeathAnimation() {
     this.deathSound.play();
     this.isDead = true;

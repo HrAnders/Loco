@@ -18,7 +18,9 @@ class CoinBar extends StatusBar {
     }
   
    
-  
+    /**
+     * This function renders the coinbar in relation to the relative coin amount of the character
+     */
     animateCoinBar() {
       setInterval(() => {
         if (this.world.character.coinAmount.toFixed(0) == 1 && this.world.character.coinAmount > 0.9) {

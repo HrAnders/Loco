@@ -17,7 +17,9 @@ class Healthbar extends StatusBar {
   }
 
  
-
+  /**
+   * This function is used to render the healthbar of the character
+   */
   animateHealthBar() {
     setInterval(() => {
       if (this.world.character.energy < 100 && this.world.character.energy >= 80) {

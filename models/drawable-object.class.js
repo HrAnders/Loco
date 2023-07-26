@@ -19,16 +19,27 @@ class DrawableObject {
     bottom: 0,
   };
 
+  /**
+   * This function loads an single image from the specified path
+   * 
+   * @param {string} path - The source path of the image
+   */
   loadImage(path) {
     this.img = new Image(); // entspricht dem img-tag in html --> this.img = document.getElementById('image) --> <img id="image">
     this.img.src = path;
   }
 
+  /**
+   * This function draws an image to the canvas with the specified x/y coordinates and its dimensions
+   * 
+   * @param {canvas 2d context} ctx - the canvas 2d context
+   */
   draw(ctx) {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
 
   /**
+   * This function transforms the images from the paths to image objects
    *
    * @param {Array} arr - array with image paths
    */
@@ -42,6 +53,11 @@ class DrawableObject {
     });
   }
 
+  /**
+   * This function renders the objects original collision boxes
+   * 
+   * @param {canvas 2d context} ctx - the canvas context
+   */
   drawCollisionBoxes(ctx) {
     if (this instanceof Character || this instanceof Chicken) {
       ctx.beginPath();
@@ -52,6 +68,11 @@ class DrawableObject {
     }
   }
 
+   /**
+   * This function renders the objects offset collision boxes
+   * 
+   * @param {canvas 2d context} ctx - the canvas context
+   */
   drawOffsetBoxes(ctx) {
     if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject) {
       ctx.beginPath();
@@ -62,6 +83,11 @@ class DrawableObject {
     }
   }
 
+   /**
+   * This function renders the characters collision box for checking the top collision
+   * 
+   * @param {canvas 2d context} ctx - the canvas context
+   */
   drawJumpCollisionBox(ctx){
     if (this instanceof Character) {
       ctx.beginPath();
@@ -72,7 +98,12 @@ class DrawableObject {
     }
   }
 
-  // Bsp.: character.isColliding(chicken)
+  /**
+   * This function checks if the collision between two objects according to their offset collision boxes
+   * 
+   * @param {colliding object} obj - the object which collides with the calling object
+   * @returns {boolean} true if the objects collide
+   */
   isColliding(obj) {
     return (
       (this.x + this.width - this.offset.right) >= obj.x + obj.offset.left &&  // R-L-Abfrage 
@@ -82,6 +113,12 @@ class DrawableObject {
     );
   }
 
+  /**
+   * This function checks if the character collides with another object from above while jumping
+   * 
+   * @param {colliding object} obj - the object which collides with the character
+   * @returns {boolean} true if the object is hit from above
+   */
   isTopColliding(obj) {
   return (
     this.isJumping &&  // Überprüfe, ob der Character sich im Sprung befindet
@@ -92,12 +129,14 @@ class DrawableObject {
   );
 }
 
-  
-  
-
+  /**
+   * This function is used to "iterate" through an image array for endless animations
+   * 
+   * @param {image array} images - Image array
+   */
   playAnimation(images) {
-    let i = this.currentImage % images.length; //modulo-fkt berechnet rest: z.b. 1 / 6 --> ergebnis 0, rest 1
-    let path = images[i]; // das i entspricht dem modulo-rest; es kann nicht außerhalb der length liegen
+    let i = this.currentImage % images.length; 
+    let path = images[i]; 
     this.img = this.imageCache[path];
     this.currentImage++;
   }

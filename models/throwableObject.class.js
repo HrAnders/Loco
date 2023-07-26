@@ -35,6 +35,11 @@ class ThrowableObject extends MovableObject {
     this.animate(this.BOTTLE_ROTATION_IMAGES);
   }
 
+  /**
+   * This function sets the gravity values for the throwable object and sets the origin coordinates
+   * 
+   * @param {boolean} characterFacesOtherDirection - true if the character looks to the left
+   */
   throw(characterFacesOtherDirection) {
     this.speedY = 30;
     this.applyGravity();
@@ -48,6 +53,11 @@ class ThrowableObject extends MovableObject {
     }, 25);
   }
 
+  /**
+   * This function renders the rotation animation
+   * 
+   * @param {image array} images - array of images
+   */
   animate(images) {
     if (!this.isCollided) {
       setInterval(() => {
@@ -56,6 +66,11 @@ class ThrowableObject extends MovableObject {
     }
   }
 
+  /**
+   * This function is used to "iterate" through an image array for endless animations
+   * 
+   * @param {image array} images - Image array
+   */
   playAnimation(images) {
     let i = this.currentImage % images.length; //modulo-fkt berechnet rest: z.b. 1 / 6 --> ergebnis 0, rest 1
     let path = images[i]; // das i entspricht dem modulo-rest; es kann nicht außerhalb der length liegen
@@ -63,6 +78,9 @@ class ThrowableObject extends MovableObject {
     this.currentImage++;
   }
 
+  /**
+   * This function is used to render the splash animation
+   */
   playSplashAnimation() {
     if (!this.isMuted) {
       this.breakingSound.play();

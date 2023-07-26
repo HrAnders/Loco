@@ -8,6 +8,9 @@ class CollectibleObject extends DrawableObject {
         super();
     }
 
+    /**
+     * This function plays the collect sound of an collectable object if its not already collected
+     */
     playCollectSound(){
         if(!this.isCollected){
             this.collectSound.play();

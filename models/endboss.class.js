@@ -55,6 +55,9 @@ class Endboss extends MovableObject {
     this.animate();
   }
 
+  /**
+   * This function is used to animate the endboss according to its state
+   */
   animate() {
     clearInterval(this.animationInterval);
 
@@ -75,14 +78,23 @@ class Endboss extends MovableObject {
     }, 1000 / 60);
   }
 
+  /**
+   * This function handles the idle animation of the endboss
+   */
   playIdleAnimation() {
     this.playAnimation(this.IMAGES_IDLE);
   }
 
+  /**
+   * This function handles the walking animation of the endboss
+   */
   playWalkAnimation() {
     this.playAnimation(this.IMAGES_WALKING);
   }
 
+  /**
+   * This function handles the hurt animation of the endboss
+   */
   playHurtAnimation() {
     clearInterval(this.animationInterval);
 
@@ -97,6 +109,9 @@ class Endboss extends MovableObject {
     }, 500);
   }
 
+  /**
+   * This function handles the death animation of the endboss
+   */
   playDeathAnimation() {
     this.deathSound.play();
     clearInterval(this.animationInterval);
@@ -109,6 +124,9 @@ class Endboss extends MovableObject {
     }, 1200);
   }
 
+  /**
+   * This function reduces the health of the endboss and checks if he is dead
+   */
   reduceHealth() {
     if (this.energy > 0) {
       this.energy -= 25;
@@ -123,15 +141,20 @@ class Endboss extends MovableObject {
     }
   }
 
+  /**
+   * This function changes the health bar position of the endboss
+   */
   changeBarPosition() {
     this.world.bossBar.x = this.x;
     this.world.bossBar.y = this.y;
   }
 
+  /**
+   * This function is called when the endboss' health is 0 to show the endscreen
+   */
   showEndScreen(){
     let endScreen = document.getElementById('endScreenDiv');
     endScreen.classList.remove('d-none');
     this.world.character.isGameOver = true;
-
   }
 }
