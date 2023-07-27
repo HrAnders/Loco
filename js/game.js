@@ -21,6 +21,8 @@ function startNewGame() {
   showControls();
   startButtonPress();
   stopButtonPress();
+  startButtonClick();
+  stopButtonClick();
 }
 
 /**
@@ -139,12 +141,14 @@ function mutePage() {
     world.backgroundMusic.muted = true;
     muteCharacter();
     muteEnemies();
+    muteCollectibles();
     world.isMuted = true;
   }
   else{
     world.backgroundMusic.muted = false;
     unmuteCharacter();
     unmuteEnemies();
+    unmuteCollectibles();
     world.isMuted = false;
   }
 }
@@ -180,6 +184,25 @@ function muteEnemies() {
 function unmuteEnemies(){
   world.level.enemies.forEach((enemy) => {
     enemy.deathSound.muted = false;
+  });
+}
+
+/**
+ * This function mutes the collectibles
+ */
+function muteCollectibles() {
+  world.level.collectibles.forEach((collectible) => {
+    collectible.collectSound.muted = true;
+  });
+}
+
+
+/**
+ * This function mutes the collectibles
+ */
+function unmuteCollectibles() {
+  world.level.collectibles.forEach((collectible) => {
+    collectible.collectSound.muted = false;
   });
 }
 
@@ -238,6 +261,48 @@ window.addEventListener("keyup", (e) => {
       break;
   }
 });
+
+/**
+ * This function handles the touch events for non mobile devices on click
+ */
+function startButtonClick(){
+  document.getElementById('btnLeft').addEventListener("mousedown", () => {
+    keyboard.LEFT = true;
+  });
+
+  document.getElementById('btnRight').addEventListener("mousedown", () => {
+    keyboard.RIGHT = true;
+  });
+
+  document.getElementById('btnUp').addEventListener("mousedown", () => {
+    keyboard.SPACE = true;
+  });
+
+  document.getElementById('btnThrow').addEventListener("mousedown", () => {
+    keyboard.CTRL = true;
+  });
+}
+
+/**
+ * This function handles the touch events for non mobile devices on release
+ */
+function stopButtonClick(){
+  document.getElementById('btnLeft').addEventListener("mouseup", () => {
+    keyboard.LEFT = false;
+  });
+
+  document.getElementById('btnRight').addEventListener("mouseup", () => {
+    keyboard.RIGHT = false;
+  });
+
+  document.getElementById('btnUp').addEventListener("mouseup", () => {
+    keyboard.SPACE = false;
+  });
+
+  document.getElementById('btnThrow').addEventListener("mouseup", () => {
+    keyboard.CTRL = false;
+  });
+}
 
 /**
  * This function handles the touch events for mobile devices on press
