@@ -22,6 +22,7 @@ class Character extends MovableObject {
   isGameOver = false;
   isIdle = false;
   isMoving = false;
+  isFalling = false;
   animationInterval;
 
   IMAGES_WALKING = [
@@ -133,8 +134,7 @@ class Character extends MovableObject {
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
       } else if (this.isAboveGround()) {
-        this.playAnimation(this.IMAGES_JUMPING);
-      } else if (this.isAboveGround()) {
+        this.checkJumpDirection();;
         this.playAnimation(this.IMAGES_JUMPING);
       } else {
         if (
@@ -263,11 +263,30 @@ class Character extends MovableObject {
     setInterval(() => {
       if (this.y >= 180) {
         this.isJumping = false;
+        this.y = 192.5;
       } else {
         this.isJumping = true;
       }
     }, 100);
   }
+
+  checkJumpDirection() {
+    let previousY = this.y;
+  
+    setInterval(() => {
+      let currentY = this.y;
+      if ((currentY > previousY)&&this.isJumping) {
+        this.isFalling = true;
+      } else if ((currentY < previousY) &&this.isJumping) {
+        this.isFalling = false;
+      }
+      else{
+        this.isFalling = null;
+      }
+      previousY = currentY;
+    }, 100); 
+  }
+  
 
   /**
    * This function starts the timer for the idle animation and sets isIdle to true after the idleTimeout

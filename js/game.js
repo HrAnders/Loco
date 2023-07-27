@@ -18,6 +18,7 @@ function init() {
 function startNewGame() {
   world = new World(canvas, keyboard);
   document.getElementById("startBtn").classList.add("d-none");
+  document.getElementById("muteButton").classList.remove("d-none");
   showControls();
   startButtonPress();
   stopButtonPress();
@@ -137,7 +138,9 @@ function goMinScreen() {
  * This function handles the muting of the game
  */
 function mutePage() {
+  let muteButton = document.getElementById('muteButton');
   if (!world.isMuted) {
+    muteButton.src = "img/icons/mute-3-64.ico"
     world.backgroundMusic.muted = true;
     muteCharacter();
     muteEnemies();
@@ -145,6 +148,7 @@ function mutePage() {
     world.isMuted = true;
   }
   else{
+    muteButton.src = "img/icons/speaker-64.ico"
     world.backgroundMusic.muted = false;
     unmuteCharacter();
     unmuteEnemies();

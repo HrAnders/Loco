@@ -21,7 +21,7 @@ class World {
     this.draw();
     this.setWorld();
     this.updateWorldData();
-    this.backgroundMusic.volume = 0.2;
+    this.backgroundMusic.volume = 0.05;
     this.backgroundMusic.play();
     this.backgroundMusic.loop = true;
   }
@@ -149,7 +149,6 @@ class World {
    */
   isHeadJumping(enemy) {
     return (
-      this.character.isColliding(enemy) &&
       this.character.isTopColliding(enemy) &&
       !enemy.isDead &&
       enemy instanceof Chicken

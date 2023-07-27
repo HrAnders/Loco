@@ -77,7 +77,7 @@ canvas {
 
 .btn-explanation {
   position: relative;
-  display: flex;
+  display: none;
   justify-content: space-between;
   width: 720px;
   margin-top: 20px;
@@ -150,7 +150,7 @@ canvas {
   font-family: Ultra;
 }
 
-#rotationDiv{
+#rotationDiv {
   display: none;
   position: absolute;
   width: 100%;
@@ -166,7 +166,7 @@ canvas {
   font-size: 2rem;
 }
 
-#rotationDiv span{
+#rotationDiv span {
   text-align: center;
 }
 
@@ -226,8 +226,6 @@ table {
   position: absolute;
 }
 
-
-
 @media only screen and (max-width: 1000px) {
   #container {
     max-width: 100%;
@@ -235,7 +233,7 @@ table {
 }
 
 @media only screen and (max-width: 500px) {
-  #rotationDiv{
+  #rotationDiv {
     display: flex;
   }
 }
@@ -247,25 +245,27 @@ table {
 
   .btn-explanation {
     margin-top: 5px;
+    width: 80%;
+    display: flex;
   }
   .control-btn {
     height: 50px;
     width: 50px;
   }
 
-  .start-btn{
+  .start-btn {
     height: 35px;
     width: 140px;
     font-size: 1.5rem;
   }
 
-  .restart-btn{
+  .restart-btn {
     height: 35px;
     width: 140px;
     font-size: 1.5rem;
   }
 
-  #fullScreenBtn{
+  #fullScreenBtn {
     display: none;
   }
 }

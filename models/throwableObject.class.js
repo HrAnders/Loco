@@ -31,6 +31,7 @@ class ThrowableObject extends MovableObject {
     this.height = 80;
     this.width = 60;
     this.isMuted = isMuted;
+    this.breakingSound.volume = 0.2;
     this.throw(characterFacesOtherDirection);
     this.animate(this.BOTTLE_ROTATION_IMAGES);
   }

@@ -3,9 +3,16 @@ class CollectibleObject extends DrawableObject {
     width = 100;
     collectSound = new Audio();
     isCollected = false;
+    offset = {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      };
 
     constructor(){
         super();
+        
     }
 
     /**

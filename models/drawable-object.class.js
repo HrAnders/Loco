@@ -74,7 +74,7 @@ class DrawableObject {
    * @param {canvas 2d context} ctx - the canvas context
    */
   drawOffsetBoxes(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject) {
+    if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject || this instanceof CollectibleObject) {
       ctx.beginPath();
       ctx.lineWidth = "5";
       ctx.strokeStyle = "red";
@@ -121,7 +121,7 @@ class DrawableObject {
    */
   isTopColliding(obj) {
   return (
-    this.isJumping &&  // Überprüfe, ob der Character sich im Sprung befindet
+    this.isFalling && // Überprüfe, ob der Character sich im Sprung befindet
     this.x + this.jumpCollisionBox.left >= obj.x + obj.offset.left && // Linke Seite der Sprung-Kollisionsbox
     this.x + this.jumpCollisionBox.right <= obj.x + obj.width - obj.offset.right && // Rechte Seite der Sprung-Kollisionsbox
     this.y + this.jumpCollisionBox.top >= obj.y + obj.offset.top  // Obere Seite der Sprung-Kollisionsbox
