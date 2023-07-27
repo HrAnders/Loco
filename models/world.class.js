@@ -374,8 +374,8 @@ class World {
    * This function adds the interactive objects to the map
    */
   addInteractiveObjectsToMap() {
-    this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.collectibles);
+    this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.throwableObjects);
     this.addToMap(this.character);
   }
