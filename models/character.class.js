@@ -86,7 +86,7 @@ class Character extends MovableObject {
   isIdleTimeoutStarted = false;
 
   constructor() {
-    super().loadImage("../img/2_character_pepe/1_idle/idle/I-1.png");
+    super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
     this.loadImages(this.IMAGES_DEAD);
@@ -145,7 +145,7 @@ class Character extends MovableObject {
         } else if (this.isIdle) {
           this.playAnimation(this.IMAGES_IDLE);
         } else {
-          this.loadImage("../img/2_character_pepe/1_idle/idle/I-1.png");
+          this.loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
         }
       }
     }, 125);
